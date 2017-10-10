@@ -1,0 +1,24 @@
+#pragma once
+
+
+namespace PerfFlow
+{
+class ProcessSample;
+
+
+class ISampler
+{
+public:
+	ISampler() = default;
+	virtual ~ISampler() = default;
+
+	ISampler(const ISampler& other) = default;
+	ISampler(ISampler&& other) = default;
+	ISampler& operator=(const ISampler& other) = default;
+	ISampler& operator=(ISampler&& other) = default;
+
+	virtual void sample(ProcessSample& outputSample) = 0;
+};
+
+
+}
