@@ -53,7 +53,7 @@ void PerfFlow::DebugClient::sample(std::vector<ComCallStack>& outputCallstacks)
 		return;
 
 	int successfulSamples = 0;
-	for (auto i = 0; i < threadCount; i++)
+	for (ULONG i = 0; i < threadCount; i++)
 	{
 		if (ComHelper::failed(_systemObjects->SetCurrentThreadId(_threadIds[i])))
 			continue;
