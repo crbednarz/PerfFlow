@@ -40,36 +40,26 @@ PerfFlow::DebugClient::DebugClient(const Process& process) :
 }
 
 
-void PerfFlow::DebugClient::sample(std::vector<ComCallStack>& outputCallstacks)
+void PerfFlow::DebugClient::sample(std::vector<ComThreadSample>& outputThreads)
 {
 	ULONG threadCount = 0;
 	if (ComHelper::failed(_systemObjects->GetNumberThreads(&threadCount)))
 		return;
 
 	_threadIds.resize(threadCount);
-	outputCallstacks.resize(threadCount);
+	outputThreads.resize(threadCount);
 
 	if (ComHelper::failed(_systemObjects->GetThreadIdsByIndex(0, threadCount, _threadIds.data(), nullptr)))
 		return;
 
-	int successfulSamples = 0;
+	auto successfulSamples = 0;
 	for (ULONG i = 0; i < threadCount; i++)
 	{
-		if (ComHelper::failed(_systemObjects->SetCurrentThreadId(_threadIds[i])))
-			continue;
-
-
-		ULONG filled = 0;
-		if (!outputCallstacks[i].sample(_control))
-		{
-			i--;
-			continue;
-		}
-
-		successfulSamples++;
+		if (outputThreads[successfulSamples].sample(_threadIds[i], _control, _systemObjects))
+			successfulSamples++;
 	}
 
-	outputCallstacks.resize(successfulSamples);
+	outputThreads.resize(successfulSamples);
 }
 
 

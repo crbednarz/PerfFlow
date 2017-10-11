@@ -11,16 +11,14 @@ PerfFlow::ComSampler::ComSampler(const Process& process) :
 
 void PerfFlow::ComSampler::sample(ProcessSample& outputSample)
 {
-	_debugClient.sample(_rawCallStackCache);
+	_debugClient.sample(_rawThreadSamples);
 
-	for (size_t threadIndex = 0; threadIndex < _rawCallStackCache.size(); ++threadIndex)
+	for (size_t threadIndex = 0; threadIndex < _rawThreadSamples.size(); ++threadIndex)
 	{
 		auto& thread = outputSample.addThread();
-		auto& rawCallStack = _rawCallStackCache[threadIndex];
+		auto& rawThreadSample = _rawThreadSamples[threadIndex];
 
-		for (size_t frameIndex = 0; frameIndex < thread.frameCount(); ++frameIndex)
-		{
-			thread.push(StackFrame(rawCallStack.getFrame(frameIndex).InstructionOffset));
-		}
+
+		rawThreadSample.copyTo(thread);
 	}
 }

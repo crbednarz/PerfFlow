@@ -3,7 +3,7 @@
 
 #include "utilities/ComIncludes.h"
 #include <vector>
-#include "ComCallStack.h"
+#include "ComThreadSample.h"
 
 
 namespace PerfFlow
@@ -17,7 +17,7 @@ class DebugClient
 public:
 	explicit DebugClient(const Process& process);
 
-	void sample(std::vector<ComCallStack>& outputCallstacks);
+	void sample(std::vector<ComThreadSample>& outputCallstacks);
 
 	bool isValid() const;
 

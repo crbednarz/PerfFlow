@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="src\sampling\debugclient\ComCallStack.h" />
     <ClInclude Include="src\sampling\debugclient\ComSampler.h" />
+    <ClInclude Include="src\sampling\debugclient\ComThreadSample.h" />
     <ClInclude Include="src\sampling\debugclient\DebugClient.h" />
     <ClInclude Include="src\sampling\ISampler.h" />
     <ClInclude Include="src\sampling\ProcessSample.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="PerfFlow.cpp" />
     <ClCompile Include="src\sampling\debugclient\ComCallStack.cpp" />
     <ClCompile Include="src\sampling\debugclient\ComSampler.cpp" />
+    <ClCompile Include="src\sampling\debugclient\ComThreadSample.cpp" />
     <ClCompile Include="src\sampling\debugclient\DebugClient.cpp" />
     <ClCompile Include="src\sampling\ProcessSample.cpp" />
     <ClCompile Include="src\sampling\StackFrame.cpp" />

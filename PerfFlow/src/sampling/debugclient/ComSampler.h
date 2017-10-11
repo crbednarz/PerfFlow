@@ -18,7 +18,7 @@ public:
 private:
 	DebugClient _debugClient;
 
-	std::vector<ComCallStack> _rawCallStackCache;
+	std::vector<ComThreadSample> _rawThreadSamples;
 };
 
 
