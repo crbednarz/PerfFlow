@@ -35,5 +35,8 @@
     <ClCompile Include="tests\utilities\TestHandleGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tests\sampling\ThreadSampleTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

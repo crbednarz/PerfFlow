@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include "StackFrame.h"
+#include <cassert>
 
 
 namespace PerfFlow
@@ -13,10 +14,11 @@ public:
 	ThreadSample();
 	
 	void push(StackFrame stackFrame);
+	void clear();
 
 	const StackFrame& getFrame(size_t index) const;
 	size_t frameCount() const;
-
+	
 
 private:
 	static const size_t MAX_FRAMES = 64;
@@ -30,6 +32,7 @@ private:
 
 inline const PerfFlow::StackFrame& PerfFlow::ThreadSample::getFrame(size_t index) const
 {
+	assert(index < frameCount());
 	return _frames[index];
 }
 

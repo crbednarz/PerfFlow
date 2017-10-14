@@ -11,5 +11,12 @@ PerfFlow::ThreadSample::ThreadSample() :
 
 void PerfFlow::ThreadSample::push(StackFrame stackFrame)
 {
+	assert(_frameCount != MAX_FRAMES);
 	_frames[_frameCount++] = stackFrame;
+}
+
+
+void PerfFlow::ThreadSample::clear()
+{
+	_frameCount = 0;
 }
