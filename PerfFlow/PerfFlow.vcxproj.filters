@@ -60,6 +60,9 @@
     <ClInclude Include="src\sampling\debugclient\ComThreadSample.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\sampling\SamplerOutputQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -90,6 +93,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\sampling\debugclient\ComThreadSample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sampling\SamplerOutputQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

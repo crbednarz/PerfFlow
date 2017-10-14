@@ -157,6 +157,7 @@
     <ClInclude Include="src\sampling\debugclient\DebugClient.h" />
     <ClInclude Include="src\sampling\ISampler.h" />
     <ClInclude Include="src\sampling\ProcessSample.h" />
+    <ClInclude Include="src\sampling\SamplerOutputQueue.h" />
     <ClInclude Include="src\sampling\StackFrame.h" />
     <ClInclude Include="src\sampling\ThreadSample.h" />
     <ClInclude Include="src\system\Process.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="src\sampling\debugclient\ComThreadSample.cpp" />
     <ClCompile Include="src\sampling\debugclient\DebugClient.cpp" />
     <ClCompile Include="src\sampling\ProcessSample.cpp" />
+    <ClCompile Include="src\sampling\SamplerOutputQueue.cpp" />
     <ClCompile Include="src\sampling\StackFrame.cpp" />
     <ClCompile Include="src\sampling\ThreadSample.cpp" />
     <ClCompile Include="src\system\Process.cpp" />
