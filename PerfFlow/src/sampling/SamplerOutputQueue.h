@@ -6,7 +6,7 @@
 namespace PerfFlow
 {
 	
-
+/// Queue for ProcessSamples where producer and consumer may be different threads from one another
 class SamplerOutputQueue
 {
 public:
