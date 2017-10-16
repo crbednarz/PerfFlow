@@ -18,6 +18,7 @@ public:
 	void clear();
 
 	size_t threadCount() const;
+	const ThreadSample& getThread(int index) const;
 
 
 private:

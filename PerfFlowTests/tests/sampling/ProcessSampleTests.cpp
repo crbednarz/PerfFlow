@@ -49,6 +49,24 @@ namespace PerfFlowTests
 			}
 		}
 
+		TEST_METHOD(canGetThread)
+		{
+			ProcessSample sample;
+
+			for (auto i = 0; i < ProcessSample::MAX_THREADS; i++)
+			{
+				auto& thread = sample.addThread();
+				thread.push(StackFrame(i));
+			}
+
+			for (size_t i = 0; i < ProcessSample::MAX_THREADS; i++)
+			{
+				auto& thread = sample.getThread(i);
+				Assert::AreEqual(static_cast<size_t>(1), thread.frameCount());
+				Assert::AreEqual(i, thread.getFrame(0).instructionPointer());
+			}
+		}
+
 	};
 
 

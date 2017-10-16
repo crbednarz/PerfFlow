@@ -21,3 +21,10 @@ void PerfFlow::ProcessSample::clear()
 
 	_threadCount = 0;
 }
+
+
+const PerfFlow::ThreadSample& PerfFlow::ProcessSample::getThread(int index) const
+{
+	assert(index < _threadCount);
+	return _threads[index];
+}
