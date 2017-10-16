@@ -24,7 +24,7 @@ bool PerfFlow::ComThreadSample::sample(ULONG threadId, const ComPtr<IDebugContro
 
 void PerfFlow::ComThreadSample::copyTo(ThreadSample& thread) const
 {
-	for (size_t frameIndex = 0; frameIndex < thread.frameCount(); ++frameIndex)
+	for (size_t frameIndex = 0; frameIndex < _callStack.frameCount(); ++frameIndex)
 	{
 		thread.push(StackFrame(_callStack.getFrame(frameIndex).InstructionOffset));
 	}
