@@ -15,6 +15,9 @@ public:
 
 
 	void addSymbol(SymbolId id, const Symbol& symbol);
+
+	const Symbol* tryGetSymbol(SymbolId id) const;
+	bool hasSymbol(SymbolId id) const;
 	
 	size_t totalSymbols() const;
 
