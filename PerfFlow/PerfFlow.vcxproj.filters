@@ -63,6 +63,15 @@
     <ClInclude Include="src\sampling\SamplerOutputQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\symbols\SymbolRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\symbols\SymbolId.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\symbols\Symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -96,6 +105,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\sampling\SamplerOutputQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\symbols\SymbolRepository.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

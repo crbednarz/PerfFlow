@@ -160,6 +160,9 @@
     <ClInclude Include="src\sampling\SamplerOutputQueue.h" />
     <ClInclude Include="src\sampling\StackFrame.h" />
     <ClInclude Include="src\sampling\ThreadSample.h" />
+    <ClInclude Include="src\symbols\Symbol.h" />
+    <ClInclude Include="src\symbols\SymbolId.h" />
+    <ClInclude Include="src\symbols\SymbolRepository.h" />
     <ClInclude Include="src\system\Process.h" />
     <ClInclude Include="src\utilities\ComHelper.h" />
     <ClInclude Include="src\utilities\ComIncludes.h" />
@@ -178,6 +181,7 @@
     <ClCompile Include="src\sampling\SamplerOutputQueue.cpp" />
     <ClCompile Include="src\sampling\StackFrame.cpp" />
     <ClCompile Include="src\sampling\ThreadSample.cpp" />
+    <ClCompile Include="src\symbols\SymbolRepository.cpp" />
     <ClCompile Include="src\system\Process.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

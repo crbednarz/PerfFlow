@@ -44,5 +44,8 @@
     <ClCompile Include="tests\sampling\SamplerOutputQueueTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tests\symbols\SymbolRepositoryTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
