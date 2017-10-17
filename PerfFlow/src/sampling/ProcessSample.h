@@ -10,7 +10,7 @@ namespace PerfFlow
 class ProcessSample
 {
 public:
-	static const size_t MAX_THREADS = 32;
+	static const size_t MAX_THREADS = 64;
 
 	ProcessSample();
 
