@@ -26,6 +26,7 @@ private:
 	ComPtr<IDebugClient> _client;
 	ComPtr<IDebugControl> _control;
 	ComPtr<IDebugSystemObjects> _systemObjects;
+	ComPtr<IDebugSymbols> _symbols;
 
 	std::vector<ULONG> _threadIds;
 

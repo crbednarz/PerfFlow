@@ -29,12 +29,17 @@ PerfFlow::DebugClient::DebugClient(const Process& process) :
 	if (ComHelper::failed(debugClient.As(&systemObjects)))
 		return;
 
+	ComPtr<IDebugSymbols> symbols;
+	if (ComHelper::failed(debugClient.As(&symbols)))
+		return;
+
 	if (ComHelper::failed(waitForClientToAttach(debugControl)))
 		return;
 
 	_client = std::move(debugClient);
 	_control = std::move(debugControl);
 	_systemObjects = std::move(systemObjects);
+	_symbols = std::move(symbols);
 	_isValid = true;
 
 }
