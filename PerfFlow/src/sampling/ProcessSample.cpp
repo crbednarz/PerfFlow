@@ -23,7 +23,7 @@ void PerfFlow::ProcessSample::clear()
 }
 
 
-const PerfFlow::ThreadSample& PerfFlow::ProcessSample::getThread(int index) const
+const PerfFlow::ThreadSample& PerfFlow::ProcessSample::getThread(size_t index) const
 {
 	assert(index < _threadCount);
 	return _threads[index];
