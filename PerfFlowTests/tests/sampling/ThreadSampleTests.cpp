@@ -19,11 +19,11 @@ namespace PerfFlowTests
 			for (auto i = 0; i < 16; i++)
 				sample.push(StackFrame(0));
 
-			Assert::AreEqual(static_cast<size_t>(16), sample.frameCount());
+			Assert::AreEqual(size_t(16), sample.frameCount());
 
 			sample.clear();
 
-			Assert::AreEqual(static_cast<size_t>(0), sample.frameCount());
+			Assert::AreEqual(size_t(0), sample.frameCount());
 		}
 
 

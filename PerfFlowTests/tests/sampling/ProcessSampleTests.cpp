@@ -19,7 +19,7 @@ namespace PerfFlowTests
 			for (auto i = 0; i < ProcessSample::MAX_THREADS; i++)
 			{
 				sample.addThread();
-				Assert::AreEqual(static_cast<size_t>(i + 1), sample.threadCount());
+				Assert::AreEqual(size_t(i + 1), sample.threadCount());
 			}
 		}
 
@@ -32,8 +32,8 @@ namespace PerfFlowTests
 			{
 				auto& thread = sample.addThread();
 				thread.push(StackFrame(i));
-				Assert::AreEqual(static_cast<size_t>(1), thread.frameCount());
-				Assert::AreEqual(static_cast<size_t>(i), thread.getFrame(0).instructionPointer());
+				Assert::AreEqual(size_t(1), thread.frameCount());
+				Assert::AreEqual(size_t(i), thread.getFrame(0).instructionPointer());
 			}
 		}
 
@@ -45,7 +45,7 @@ namespace PerfFlowTests
 			for (auto i = 0; i < ProcessSample::MAX_THREADS; i++)
 			{
 				auto& thread = sample.addThread();
-				Assert::AreEqual(static_cast<size_t>(0), thread.frameCount());
+				Assert::AreEqual(size_t(0), thread.frameCount());
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace PerfFlowTests
 			for (size_t i = 0; i < ProcessSample::MAX_THREADS; i++)
 			{
 				auto& thread = sample.getThread(i);
-				Assert::AreEqual(static_cast<size_t>(1), thread.frameCount());
+				Assert::AreEqual(size_t(1), thread.frameCount());
 				Assert::AreEqual(i, thread.getFrame(0).instructionPointer());
 			}
 		}

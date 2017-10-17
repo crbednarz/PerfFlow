@@ -19,10 +19,10 @@ TEST_CLASS(UniqueHandleTests)
 	{
 		{
 			TestHandle handle(TestHandleGenerator::allocate());
-			Assert::AreEqual(static_cast<size_t>(1), TestHandleGenerator::remainingHandles(), L"A single handle should exist after first allocation.");
+			Assert::AreEqual(size_t(1), TestHandleGenerator::remainingHandles(), L"A single handle should exist after first allocation.");
 		}
 
-		Assert::AreEqual(static_cast<size_t>(0), TestHandleGenerator::remainingHandles(), L"No handles should exist after leaving handle's scope.");
+		Assert::AreEqual(size_t(0), TestHandleGenerator::remainingHandles(), L"No handles should exist after leaving handle's scope.");
 	}
 
 
@@ -36,7 +36,7 @@ TEST_CLASS(UniqueHandleTests)
 			Assert::IsTrue(destinationHandle.isValid(), L"Destination handle should be valid after move.");
 		}
 
-		Assert::AreEqual(static_cast<size_t>(0), TestHandleGenerator::remainingHandles(), L"No handles should exist after handle has been destroyed.");
+		Assert::AreEqual(size_t(0), TestHandleGenerator::remainingHandles(), L"No handles should exist after handle has been destroyed.");
 	}
 
 
@@ -49,7 +49,7 @@ TEST_CLASS(UniqueHandleTests)
 		Assert::IsFalse(handle.isValid(), L"Released handle should no longer be valid.");
 
 		TestHandleGenerator::destroy(rawHandle);
-		Assert::AreEqual(static_cast<size_t>(0), TestHandleGenerator::remainingHandles(), L"No handles should exist after handle has been destroyed.");
+		Assert::AreEqual(size_t(0), TestHandleGenerator::remainingHandles(), L"No handles should exist after handle has been destroyed.");
 	}
 
 
@@ -58,13 +58,13 @@ TEST_CLASS(UniqueHandleTests)
 		TestHandle handleA(TestHandleGenerator::allocate());
 		TestHandle handleB(TestHandleGenerator::allocate());
 
-		Assert::AreEqual(static_cast<size_t>(2), TestHandleGenerator::remainingHandles(), L"Two handles should exist after two allocations.");
+		Assert::AreEqual(size_t(2), TestHandleGenerator::remainingHandles(), L"Two handles should exist after two allocations.");
 
 		handleA.reset(handleB.release());
-		Assert::AreEqual(static_cast<size_t>(1), TestHandleGenerator::remainingHandles(), L"One handle should exist after reseting one.");
+		Assert::AreEqual(size_t(1), TestHandleGenerator::remainingHandles(), L"One handle should exist after reseting one.");
 
 		handleA.reset();
-		Assert::AreEqual(static_cast<size_t>(0), TestHandleGenerator::remainingHandles(), L"No handles should remain after resetting both.");
+		Assert::AreEqual(size_t(0), TestHandleGenerator::remainingHandles(), L"No handles should remain after resetting both.");
 	}
 
 
