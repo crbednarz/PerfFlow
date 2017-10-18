@@ -15,10 +15,14 @@ public:
 
 	void sample(ProcessSample& outputSample) override;
 
+	void setSymbolOutput(std::shared_ptr<SymbolRepository> symbolRepository) override;
+	void clearSymbolOutput() override;
+
 private:
 	DebugClient _debugClient;
 
 	std::vector<ComThreadSample> _rawThreadSamples;
+	std::shared_ptr<SymbolRepository> _symbolRepository;
 };
 
 

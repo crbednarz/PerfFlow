@@ -4,6 +4,8 @@
 #include "utilities/ComIncludes.h"
 #include <vector>
 #include "ComThreadSample.h"
+#include "symbols/SymbolRepository.h"
+#include <memory>
 
 
 namespace PerfFlow
@@ -20,6 +22,7 @@ public:
 	void sample(std::vector<ComThreadSample>& outputCallstacks);
 
 	bool isValid() const;
+	void exportSymbols(ThreadSample& thread, SymbolRepository& symbolRepository) const;
 
 private:
 	bool _isValid;

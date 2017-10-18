@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DebugClient.h"
 #include "system/Process.h"
+#include "sampling/ThreadSample.h"
 #include "utilities/ComHelper.h"
 #include "ComCallStack.h"
 #include <thread>
@@ -65,6 +66,31 @@ void PerfFlow::DebugClient::sample(std::vector<ComThreadSample>& outputThreads)
 	}
 
 	outputThreads.resize(successfulSamples);
+}
+
+
+void PerfFlow::DebugClient::exportSymbols(ThreadSample& thread, SymbolRepository& symbolRepository) const
+{
+	const ULONG NAME_BUFFER_SIZE = 64;
+	char nameBuffer[NAME_BUFFER_SIZE];
+
+	for (size_t i = 0; i < thread.frameCount(); i++)
+	{
+		auto frame = thread.getFrame(i);
+		
+		ULONG nameSize;
+		ULONG64 displacement;
+		_symbols->GetNameByOffset(frame.instructionPointer(),
+			nameBuffer,
+			NAME_BUFFER_SIZE,
+			&nameSize,
+			&displacement);
+
+		SymbolId symbolId(frame.instructionPointer() - displacement);
+		if (!symbolRepository.hasSymbol(symbolId))
+			symbolRepository.addSymbol(symbolId, Symbol(std::string(nameBuffer, nameSize)));
+		thread.setSymbolForFrame(i, symbolId);
+	}
 }
 
 

@@ -1,5 +1,12 @@
 #include "stdafx.h"
 #include "MainWindow.h"
+#include "sampling/debugclient/ComSampler.h"
+#include "sampling/ProcessSample.h"
+#include "system/Process.h"
+#include <memory>
+#include <thread>
+#include <chrono>
+
 
 enum
 {
@@ -28,7 +35,27 @@ PerfFlow::MainWindow::MainWindow(const wxString& title, const wxPoint& position,
 
 void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
 {
+	Process process(33020);
+	auto sampler = std::make_unique<ComSampler>(process);
+	auto symbols = std::make_shared<SymbolRepository>();
+	auto sample = std::make_unique<ProcessSample>();
+	sampler->setSymbolOutput(symbols);
+	
+	sampler->sample(*sample);
 
+
+	for (size_t threadIndex = 0; threadIndex < sample->threadCount(); threadIndex++)
+	{
+		const auto& thread = sample->getThread(threadIndex);
+
+		for (size_t frameIndex = 0; frameIndex < thread.frameCount(); frameIndex++)
+		{
+			auto& frame = thread.getFrame(frameIndex);
+			wxLogMessage(symbols->tryGetSymbol(frame.getSymbolId())->name().c_str());
+		}
+	}
+
+	sample->clear();
 }
 
 

@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+#include "symbols/SymbolRepository.h"
 
 
 namespace PerfFlow
@@ -18,6 +20,8 @@ public:
 	ISampler& operator=(ISampler&& other) = default;
 
 	virtual void sample(ProcessSample& outputSample) = 0;
+	virtual void setSymbolOutput(std::shared_ptr<SymbolRepository> symbolRepository) = 0;
+	virtual void clearSymbolOutput() = 0;
 };
 
 

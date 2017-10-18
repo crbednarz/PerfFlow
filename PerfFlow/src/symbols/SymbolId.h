@@ -10,6 +10,8 @@ namespace PerfFlow
 class SymbolId
 {
 public:
+	static SymbolId None;
+
 	explicit SymbolId(size_t symbolAddress);
 	bool operator ==(const SymbolId &rhs) const;
 	bool operator !=(const SymbolId &rhs) const;

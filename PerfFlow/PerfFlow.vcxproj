@@ -181,6 +181,8 @@
     <ClCompile Include="src\sampling\SamplerOutputQueue.cpp" />
     <ClCompile Include="src\sampling\StackFrame.cpp" />
     <ClCompile Include="src\sampling\ThreadSample.cpp" />
+    <ClCompile Include="src\symbols\Symbol.cpp" />
+    <ClCompile Include="src\symbols\SymbolId.cpp" />
     <ClCompile Include="src\symbols\SymbolRepository.cpp" />
     <ClCompile Include="src\system\Process.cpp" />
     <ClCompile Include="stdafx.cpp">

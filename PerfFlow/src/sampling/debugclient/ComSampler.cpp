@@ -18,7 +18,21 @@ void PerfFlow::ComSampler::sample(ProcessSample& outputSample)
 		auto& thread = outputSample.addThread();
 		auto& rawThreadSample = _rawThreadSamples[threadIndex];
 
-
 		rawThreadSample.copyTo(thread);
+
+		if (_symbolRepository != nullptr)
+			_debugClient.exportSymbols(thread, *_symbolRepository);
 	}
+}
+
+
+void PerfFlow::ComSampler::setSymbolOutput(std::shared_ptr<SymbolRepository> symbolRepository)
+{
+	_symbolRepository = symbolRepository;
+}
+
+
+void PerfFlow::ComSampler::clearSymbolOutput()
+{
+	_symbolRepository = nullptr;
 }
