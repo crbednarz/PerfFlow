@@ -6,6 +6,8 @@
 #include <memory>
 #include <thread>
 #include <chrono>
+#include "sampling/SamplerOutputQueue.h"
+#include "sampling/SamplingTask.h"
 
 
 enum
@@ -35,27 +37,42 @@ PerfFlow::MainWindow::MainWindow(const wxString& title, const wxPoint& position,
 
 void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
 {
-	Process process(33020);
+	Process process(25356);
 	auto sampler = std::make_unique<ComSampler>(process);
 	auto symbols = std::make_shared<SymbolRepository>();
-	auto sample = std::make_unique<ProcessSample>();
+	auto samples = std::make_shared<SamplerOutputQueue>(1000);
 	sampler->setSymbolOutput(symbols);
-	
-	sampler->sample(*sample);
 
+	auto samplingTask = std::make_unique<SamplingTask>(std::move(sampler), samples);
 
-	for (size_t threadIndex = 0; threadIndex < sample->threadCount(); threadIndex++)
+	samplingTask->begin();
+
+	int c = 0;
+
+	auto sample = std::make_unique<ProcessSample>();
+	while (true)
 	{
-		const auto& thread = sample->getThread(threadIndex);
+		
+		if (!samples->tryDequeue(*sample))
+			continue;
 
-		for (size_t frameIndex = 0; frameIndex < thread.frameCount(); frameIndex++)
+		for (size_t threadIndex = 0; threadIndex < sample->threadCount(); threadIndex++)
 		{
-			auto& frame = thread.getFrame(frameIndex);
-			wxLogMessage(symbols->tryGetSymbol(frame.getSymbolId())->name().c_str());
-		}
-	}
+			const auto& thread = sample->getThread(threadIndex);
 
-	sample->clear();
+			for (size_t frameIndex = 0; frameIndex < thread.frameCount(); frameIndex++)
+			{
+				auto& frame = thread.getFrame(frameIndex);
+				wxLogMessage(symbols->tryGetSymbol(frame.getSymbolId())->name().c_str());
+			}
+		}
+
+		sample->clear();
+		c++;
+
+		if (c == 1000)
+			return;
+	}
 }
 
 
