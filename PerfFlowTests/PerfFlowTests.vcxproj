@@ -169,6 +169,7 @@
     </ClCompile>
     <ClCompile Include="tests\sampling\ProcessSampleTests.cpp" />
     <ClCompile Include="tests\sampling\SamplerOutputQueueTests.cpp" />
+    <ClCompile Include="tests\sampling\SamplingTaskTests.cpp" />
     <ClCompile Include="tests\sampling\ThreadSampleTests.cpp" />
     <ClCompile Include="tests\symbols\SymbolRepositoryTests.cpp" />
     <ClCompile Include="tests\utilities\TestHandleGenerator.cpp" />
