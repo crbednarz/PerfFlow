@@ -37,7 +37,16 @@ PerfFlow::MainWindow::MainWindow(const wxString& title, const wxPoint& position,
 
 void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
 {
-	Process process(25356);
+	auto processList = Process::CreateProcessList();
+
+	Process process;
+
+	for (auto& processEntry : processList)
+	{
+		if (processEntry.name() == L"notepad.exe")
+			process = processEntry;
+	}
+
 	auto sampler = std::make_unique<ComSampler>(process);
 	auto symbols = std::make_shared<SymbolRepository>();
 	auto samples = std::make_shared<SamplerOutputQueue>(1000);
