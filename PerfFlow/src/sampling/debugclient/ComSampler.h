@@ -8,7 +8,7 @@ namespace PerfFlow
 	
 
 /// Sampler based on the COM IDebugClient component.
-class ComSampler : ISampler
+class ComSampler : public ISampler
 {
 public:
 	explicit ComSampler(const Process& process);
