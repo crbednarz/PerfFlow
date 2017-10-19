@@ -25,7 +25,7 @@ namespace PerfFlowTests
 
 			for (size_t i = 0; i < 10; i++)
 			{
-				repo.addSymbol(SymbolId(i), Symbol());
+				repo.addSymbol(SymbolId(i), Symbol(std::to_string(i)));
 
 				Assert::AreEqual(i + 1, repo.totalSymbols());
 			}
@@ -36,7 +36,7 @@ namespace PerfFlowTests
 			SymbolRepository repo;
 
 			for (size_t i = 0; i < 10; i++)
-				repo.addSymbol(SymbolId(i), Symbol());
+				repo.addSymbol(SymbolId(i), Symbol(std::to_string(i)));
 
 			for (size_t i = 0; i < 10; i++)
 			{
