@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include "wx/wxprec.h"
+#include "wx/glcanvas.h"
 #include "MainWindow.h"
 #include "sampling/debugclient/ComSampler.h"
 #include "sampling/ProcessSample.h"
@@ -8,6 +10,7 @@
 #include <chrono>
 #include "sampling/SamplerOutputQueue.h"
 #include "sampling/SamplingTask.h"
+#include "VisualizerPane.h"
 
 
 enum
@@ -31,6 +34,7 @@ PerfFlow::MainWindow::MainWindow(const wxString& title, const wxPoint& position,
 	menuFile->Append(wxID_EXIT);
 	auto menuBar = new wxMenuBar;
 	menuBar->Append(menuFile, "&File");
+	new VisualizerPane(this);
 	SetMenuBar(menuBar);
 }
 
