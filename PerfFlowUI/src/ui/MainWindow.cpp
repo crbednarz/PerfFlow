@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "wx/wxprec.h"
-#include "wx/glcanvas.h"
 #include "MainWindow.h"
 #include "sampling/debugclient/ComSampler.h"
 #include "sampling/ProcessSample.h"

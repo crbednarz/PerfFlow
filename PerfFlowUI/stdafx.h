@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <tchar.h>
 
-#include "wx/wxprec.h"
 
 
 // TODO: reference additional headers your program requires here
