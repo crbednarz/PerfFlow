@@ -9,5 +9,5 @@
 #define OGLPLUS_NO_SITE_CONFIG
 #endif
 #undef OGLPLUS_LINK_LIBRARY
-#define OGLPLUS_LINK_LIBRARY 1
+#define OGLPLUS_LINK_LIBRARY 0
 #include "oglplus/all.hpp"
