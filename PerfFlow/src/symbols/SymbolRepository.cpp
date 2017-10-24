@@ -5,13 +5,17 @@
 
 void PerfFlow::SymbolRepository::addSymbol(SymbolId id, const Symbol& symbol)
 {
-	assert(!hasSymbol(id));
-	_symbols.insert(std::make_pair(id, symbol));
+	if (!hasSymbol(id))
+	{
+		std::lock_guard<std::mutex> lockGuard(_mutex);
+		_symbols.insert(std::make_pair(id, symbol));
+	}
 }
 
 
-const PerfFlow::Symbol* PerfFlow::SymbolRepository::tryGetSymbol(SymbolId id) const
+const PerfFlow::Symbol* PerfFlow::SymbolRepository::tryGetSymbol(SymbolId id)
 {
+	std::lock_guard<std::mutex> lockGuard(_mutex);
 	auto it = _symbols.find(id);
 
 	if (it != _symbols.end())
@@ -21,13 +25,15 @@ const PerfFlow::Symbol* PerfFlow::SymbolRepository::tryGetSymbol(SymbolId id) co
 }
 
 
-bool PerfFlow::SymbolRepository::hasSymbol(SymbolId id) const
+bool PerfFlow::SymbolRepository::hasSymbol(SymbolId id)
 {
+	std::lock_guard<std::mutex> lockGuard(_mutex);
 	return _symbols.find(id) != _symbols.end();
 }
 
 
-size_t PerfFlow::SymbolRepository::totalSymbols() const
+size_t PerfFlow::SymbolRepository::totalSymbols()
 {
+	std::lock_guard<std::mutex> lockGuard(_mutex);
 	return _symbols.size();
 }
