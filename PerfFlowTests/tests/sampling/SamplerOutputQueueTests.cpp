@@ -12,72 +12,84 @@ namespace PerfFlowTests
 
 	TEST_CLASS(SamplerOutputQueueTests)
 	{
-
-		TEST_METHOD(canEnqueueUntilFull)
+		TEST_METHOD(hasWorkingSampleWhenEmpty)
 		{
-			const size_t CAPACITY = 100;
-
+			const size_t CAPACITY = 10;
 			auto queue = std::make_unique<SamplerOutputQueue>(CAPACITY);
-			auto sample = std::make_unique<ProcessSample>();
-		
-			Assert::AreEqual(CAPACITY, queue->capacity());
 
-			for (auto i = 0; i < CAPACITY; i++)
-				Assert::IsTrue(queue->tryEnqueue(*sample));
-		
-			Assert::IsFalse(queue->tryEnqueue(*sample));
+			Assert::IsTrue(queue->hasWorkingSample());
+			
+			for (size_t i = 0; i < CAPACITY; i++)
+				queue->commit();
+			Assert::IsFalse(queue->hasWorkingSample());
+
+			for (size_t i = 0; i < CAPACITY; i++)
+				queue->pop();
+			Assert::IsTrue(queue->hasWorkingSample());
 		}
 
-		TEST_METHOD(canDequeUntilEmpty)
+		TEST_METHOD(canPeekWhenNotEmpty)
 		{
-
-			const size_t CAPACITY = 100;
-
+			const size_t CAPACITY = 10;
 			auto queue = std::make_unique<SamplerOutputQueue>(CAPACITY);
-			auto sample = std::make_unique<ProcessSample>();
 
-			for (auto i = 0; i < CAPACITY; i++)
-				Assert::IsTrue(queue->tryEnqueue(*sample));
+			Assert::IsFalse(queue->canPeek());
 
+			queue->commit();
+			Assert::IsTrue(queue->canPeek());
 
-			for (auto i = 0; i < CAPACITY; i++)
-				Assert::IsTrue(queue->tryDequeue(*sample));
-		
-			Assert::IsFalse(queue->tryDequeue(*sample));
+			queue->pop();
+			Assert::IsFalse(queue->canPeek());
 		}
 
-
-		TEST_METHOD(canEnqueAndDequeTogether)
+		TEST_METHOD(canWriteAndReadFullQueue)
 		{
-			const size_t CAPACITY = 100;
-
+			const size_t CAPACITY = 10;
 			auto queue = std::make_unique<SamplerOutputQueue>(CAPACITY);
-			auto sample = std::make_unique<ProcessSample>();
-
-			for (auto i = 0; i < CAPACITY; i++)
+			
+			for (size_t i = 0; i < CAPACITY; i++)
 			{
-				for (auto enqueueIndex = 0; enqueueIndex < i; enqueueIndex++)
-					Assert::IsTrue(queue->tryEnqueue(*sample));
-
-				for (auto dequeueIndex = 0; dequeueIndex < i; dequeueIndex++)
-					Assert::IsTrue(queue->tryDequeue(*sample));
-
-				Assert::IsFalse(queue->tryDequeue(*sample));
-			}
-
-			Assert::IsTrue(queue->tryEnqueue(*sample));
-
-			for (auto i = 0; i < CAPACITY - 1; i++)
-			{
-				for (auto enqueueIndex = 0; enqueueIndex <  i; enqueueIndex++)
-					Assert::IsTrue(queue->tryEnqueue(*sample));
+				Assert::IsTrue(queue->hasWorkingSample());
 				
-				for (auto dequeueIndex = 0; dequeueIndex < i; dequeueIndex++)
-					Assert::IsTrue(queue->tryDequeue(*sample));
+				for (size_t threadIndex = 0; threadIndex < i; threadIndex++)
+					queue->workingSample().addThread();
+				
+				queue->commit();
 			}
 
-			Assert::IsTrue(queue->tryDequeue(*sample));
-			Assert::IsFalse(queue->tryDequeue(*sample));
+			Assert::IsFalse(queue->hasWorkingSample());
+
+			for (size_t i = 0; i < CAPACITY; i++)
+			{
+				Assert::IsTrue(queue->canPeek());
+				Assert::AreEqual(i, queue->peek().threadCount());
+
+				queue->pop();
+			}
+
+			Assert::IsFalse(queue->canPeek());
+		}
+
+		TEST_METHOD(samplesAreClearedAfterUse)
+		{
+			const size_t CAPACITY = 10;
+			auto queue = std::make_unique<SamplerOutputQueue>(CAPACITY);
+
+			for (size_t i = 0; i < CAPACITY; i++)
+			{
+				for (size_t threadIndex = 0; threadIndex < 10; threadIndex++)
+					queue->workingSample().addThread();
+
+				queue->commit();
+			}
+
+			for (size_t i = 0; i < CAPACITY; i++)
+				queue->pop();
+
+			queue->commit();
+
+			Assert::AreEqual(size_t(0), queue->workingSample().threadCount());
+
 		}
 	};
 

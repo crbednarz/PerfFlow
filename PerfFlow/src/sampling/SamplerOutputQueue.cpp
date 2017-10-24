@@ -4,36 +4,51 @@
 
 PerfFlow::SamplerOutputQueue::SamplerOutputQueue(size_t capacity) :
 	_samples(capacity + 1, ProcessSample()),
-	_head(0),
-	_tail(0)
+	_top(0),
+	_bottom(0)
 {
 
 }
 
 
-bool PerfFlow::SamplerOutputQueue::tryEnqueue(const ProcessSample& sample)
+bool PerfFlow::SamplerOutputQueue::hasWorkingSample() const
 {
-	auto nextHead = nextListIndex(_head);
-	if (nextHead == _tail)
-		return false;
-
-	_samples[_head] = sample;
-	_head = nextHead;
-
-	return true;
+	return nextListIndex(_bottom) != _top;
 }
 
 
-bool PerfFlow::SamplerOutputQueue::tryDequeue(ProcessSample& outputSample)
+PerfFlow::ProcessSample& PerfFlow::SamplerOutputQueue::workingSample()
 {
-	if (_tail == _head)
-		return false;
+	assert(hasWorkingSample());
+	return _samples[_bottom];
+}
 
-	outputSample = _samples[_tail];
 
-	_tail = nextListIndex(_tail);
+void PerfFlow::SamplerOutputQueue::commit()
+{
+	assert(hasWorkingSample());
+	_bottom = nextListIndex(_bottom);
+}
 
-	return true;
+
+bool PerfFlow::SamplerOutputQueue::canPeek() const
+{
+	return _top != _bottom;
+}
+
+
+const PerfFlow::ProcessSample& PerfFlow::SamplerOutputQueue::peek() const
+{
+	assert(canPeek());
+	return _samples[_top];
+}
+
+
+void PerfFlow::SamplerOutputQueue::pop()
+{
+	assert(canPeek());
+	_samples[_top].clear();
+	_top = nextListIndex(_top);
 }
 
 

@@ -61,16 +61,17 @@ void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
 
 	int c = 0;
 
-	auto sample = std::make_unique<ProcessSample>();
 	while (true)
 	{
 		
-		if (!samples->tryDequeue(*sample))
+		if (!samples->canPeek())
 			continue;
 
-		for (size_t threadIndex = 0; threadIndex < sample->threadCount(); threadIndex++)
+		auto sample = samples->peek();
+
+		for (size_t threadIndex = 0; threadIndex < sample.threadCount(); threadIndex++)
 		{
-			const auto& thread = sample->getThread(threadIndex);
+			const auto& thread = sample.getThread(threadIndex);
 
 			for (size_t frameIndex = 0; frameIndex < thread.frameCount(); frameIndex++)
 			{
@@ -79,7 +80,7 @@ void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
 			}
 		}
 
-		sample->clear();
+		samples->pop();
 		c++;
 
 		if (c == 1000)

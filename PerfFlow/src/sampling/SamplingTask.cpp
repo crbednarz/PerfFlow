@@ -19,12 +19,12 @@ void PerfFlow::SamplingTask::begin()
 
 	_samplingThread = std::thread([this]()
 	{
-		auto sample = std::make_unique<ProcessSample>();
 		while (!_shouldEnd)
 		{
-			sample->clear();
-			_sampler->sample(*sample);
-			_outputQueue->tryEnqueue(*sample);
+			if (!_outputQueue->hasWorkingSample())
+				continue;
+			_sampler->sample(_outputQueue->workingSample());
+			_outputQueue->commit();
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 
