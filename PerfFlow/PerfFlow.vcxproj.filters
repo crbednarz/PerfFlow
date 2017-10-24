@@ -78,6 +78,9 @@
     <ClInclude Include="src\utilities\Win32Handle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\visualization\IVisualizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -171,7 +171,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\app\PerfFlowUIApp.cpp" />
-    <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\ui\MainWindow.cpp" />
     <ClCompile Include="src\ui\VisualizerPane.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -182,6 +181,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Libraries\glad\glad.vcxproj">
+      <Project>{5d200ca1-8cf2-4f3c-995f-74a94d076c4f}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\PerfFlow\PerfFlow.vcxproj">
       <Project>{811264c4-5447-47b4-9c99-06b03b1cd7c9}</Project>
     </ProjectReference>
