@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\PerfFlow\src\;./;src/;../Libraries/wxWidgets/lib/vc_x64_lib/mswu/;../Libraries/wxWidgets/include/;../Libraries/oglplus/include/;../Libraries/oglplus/implement/;../Libraries/glad/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../PerfFlowVisualizers/src/;..\PerfFlow\src\;./;src/;../Libraries/wxWidgets/lib/vc_x64_lib/mswu/;../Libraries/wxWidgets/include/;../Libraries/oglplus/include/;../Libraries/oglplus/implement/;../Libraries/glad/include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,7 +109,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;WXUSINGLDLL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../Libraries/wxWidgets/lib/vc141_x64_dll/mswu/;../Libraries/wxWidgets/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../PerfFlowVisualizers/src/;../Libraries/wxWidgets/lib/vc141_x64_dll/mswu/;../Libraries/wxWidgets/include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +127,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;WXUSINGLDLL</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../Libraries/wxWidgets/lib/vc141_x64_dll/mswu/;../Libraries/wxWidgets/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../PerfFlowVisualizers/src/;../Libraries/wxWidgets/lib/vc141_x64_dll/mswu/;../Libraries/wxWidgets/include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +147,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\PerfFlow\src\;./;src/;../Libraries/wxWidgets/lib/vc_x64_lib/mswu/;../Libraries/wxWidgets/include/;../Libraries/oglplus/include/;../Libraries/oglplus/implement/;../Libraries/glad/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../PerfFlowVisualizers/src/;..\PerfFlow\src\;./;src/;../Libraries/wxWidgets/lib/vc_x64_lib/mswu/;../Libraries/wxWidgets/include/;../Libraries/oglplus/include/;../Libraries/oglplus/implement/;../Libraries/glad/include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -165,7 +165,6 @@
     <ClInclude Include="src\app\PerfFlowUIApp.h" />
     <ClInclude Include="src\ui\MainWindow.h" />
     <ClInclude Include="src\ui\VisualizerPane.h" />
-    <ClInclude Include="src\utilities\GLIncludes.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -183,6 +182,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Libraries\glad\glad.vcxproj">
       <Project>{5d200ca1-8cf2-4f3c-995f-74a94d076c4f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\PerfFlowVisualizers\PerfFlowVisualizers.vcxproj">
+      <Project>{ae4b2e0d-b3a0-4b5e-8691-71584a6228f1}</Project>
     </ProjectReference>
     <ProjectReference Include="..\PerfFlow\PerfFlow.vcxproj">
       <Project>{811264c4-5447-47b4-9c99-06b03b1cd7c9}</Project>

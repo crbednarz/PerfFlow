@@ -89,7 +89,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;src/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;src/;../Libraries/glad/include/;../Libraries/oglplus/include/</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -104,7 +104,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;src/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;src/;../Libraries/glad/include/;../Libraries/oglplus/include/</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -121,7 +121,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;src/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;src/;../Libraries/glad/include/;../Libraries/oglplus/include/</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -140,7 +140,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;src/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;src/;../Libraries/glad/include/;../Libraries/oglplus/include/</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -165,6 +165,7 @@
     <ClInclude Include="src\symbols\SymbolId.h" />
     <ClInclude Include="src\symbols\SymbolRepository.h" />
     <ClInclude Include="src\system\Process.h" />
+    <ClInclude Include="src\utilities\GLIncludes.h" />
     <ClInclude Include="src\utilities\Win32Handle.h" />
     <ClInclude Include="src\utilities\ComHelper.h" />
     <ClInclude Include="src\utilities\ComIncludes.h" />

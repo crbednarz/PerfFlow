@@ -1,14 +1,15 @@
 #include "stdafx.h"
 #include "VisualizerPane.h"
+#include "visualization/IVisualizer.h"
 
 
-wxBEGIN_EVENT_TABLE(VisualizerPane, wxGLCanvas)
-	EVT_PAINT(VisualizerPane::onPaint)
-	EVT_SIZE(VisualizerPane::onSize)
+wxBEGIN_EVENT_TABLE(PerfFlow::VisualizerPane, wxGLCanvas)
+	EVT_PAINT(PerfFlow::VisualizerPane::onPaint)
+	EVT_SIZE(PerfFlow::VisualizerPane::onSize)
 wxEND_EVENT_TABLE()
 
 
-VisualizerPane::VisualizerPane(wxFrame* parent) :
+PerfFlow::VisualizerPane::VisualizerPane(wxFrame* parent) :
 	wxGLCanvas(parent)
 {
 
@@ -30,11 +31,10 @@ VisualizerPane::VisualizerPane(wxFrame* parent) :
 		wxLogFatalError("Unable to initialize OpenGL.");
 		return;
 	}
-
 }
 
 
-void VisualizerPane::onPaint(wxPaintEvent& paintEvent)
+void PerfFlow::VisualizerPane::onPaint(wxPaintEvent& paintEvent)
 {
 	oglplus::Context gl;
 	wxPaintDC dc(this);
@@ -42,11 +42,18 @@ void VisualizerPane::onPaint(wxPaintEvent& paintEvent)
 	gl.ClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 	gl.Clear().ColorBuffer();
 
+
 	SwapBuffers();
 }
 
 
-void VisualizerPane::onSize(wxSizeEvent& sizeEvent)
+void PerfFlow::VisualizerPane::onSize(wxSizeEvent& sizeEvent)
 {
 
+}
+
+
+void PerfFlow::VisualizerPane::setVisualizer(std::unique_ptr<IVisualizer> visualizer)
+{
+	_visualizer = std::move(visualizer);
 }
