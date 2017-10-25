@@ -10,7 +10,7 @@ namespace PerfFlow
 class ProcessSample
 {
 public:
-	static const size_t MAX_THREADS = 64;
+	static const size_t MaxThreads = 64;
 
 	ProcessSample();
 
@@ -22,7 +22,7 @@ public:
 
 
 private:
-	std::array<ThreadSample, MAX_THREADS> _threads;
+	std::array<ThreadSample, MaxThreads> _threads;
 	size_t _threadCount;
 };
 

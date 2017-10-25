@@ -13,6 +13,8 @@ class ThreadSample;
 class ComCallStack
 {
 public:
+	static const size_t MaxFrames = 64;
+
 	ComCallStack();
 
 	/// Fills frames with stack trace from debugControl. Returns true on success.
@@ -22,8 +24,7 @@ public:
 	size_t frameCount() const;
 
 private:
-	static const size_t MAX_FRAMES = 64;
-	std::array<DEBUG_STACK_FRAME, MAX_FRAMES> _frames;
+	std::array<DEBUG_STACK_FRAME, MaxFrames> _frames;
 	size_t _frameCount;
 };
 

@@ -80,11 +80,12 @@ void PerfFlow::DebugClient::exportSymbols(ThreadSample& thread, SymbolRepository
 		
 		ULONG nameSize;
 		ULONG64 displacement;
-		_symbols->GetNameByOffset(frame.instructionPointer(),
+		if (FAILED(_symbols->GetNameByOffset(frame.instructionPointer(),
 			nameBuffer,
 			NAME_BUFFER_SIZE,
 			&nameSize,
-			&displacement);
+			&displacement)))
+			continue;
 
 		SymbolId symbolId(frame.instructionPointer() - displacement);
 		if (!symbolRepository.hasSymbol(symbolId))

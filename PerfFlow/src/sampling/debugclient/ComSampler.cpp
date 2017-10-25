@@ -13,7 +13,7 @@ void PerfFlow::ComSampler::sample(ProcessSample& outputSample)
 {
 	_debugClient.sample(_rawThreadSamples);
 
-	for (size_t threadIndex = 0; threadIndex < _rawThreadSamples.size(); ++threadIndex)
+	for (size_t threadIndex = 0; threadIndex < std::min(ProcessSample::MaxThreads, _rawThreadSamples.size()); ++threadIndex)
 	{
 		auto& thread = outputSample.addThread();
 		auto& rawThreadSample = _rawThreadSamples[threadIndex];

@@ -11,6 +11,8 @@ namespace PerfFlow
 class ThreadSample
 {
 public:
+	static const size_t MaxFrames = 64;
+
 	ThreadSample();
 	
 	void setSymbolForFrame(size_t index, SymbolId symbol);
@@ -22,8 +24,7 @@ public:
 	
 
 private:
-	static const size_t MAX_FRAMES = 64;
-	std::array<StackFrame, MAX_FRAMES> _frames;
+	std::array<StackFrame, MaxFrames> _frames;
 	size_t _frameCount;
 };
 

@@ -19,7 +19,7 @@ void PerfFlow::ThreadSample::setSymbolForFrame(size_t index, SymbolId symbol)
 
 void PerfFlow::ThreadSample::push(StackFrame stackFrame)
 {
-	assert(_frameCount != MAX_FRAMES);
+	assert(_frameCount != MaxFrames);
 	_frames[_frameCount++] = stackFrame;
 }
 

@@ -47,7 +47,8 @@ void PerfFlow::VisualizerPane::onPaint(wxPaintEvent& paintEvent)
 
 void PerfFlow::VisualizerPane::onSize(wxSizeEvent& sizeEvent)
 {
-
+	using namespace oglplus;
+	Context::Viewport(sizeEvent.GetSize().GetWidth(), sizeEvent.GetSize().GetHeight());
 }
 
 
