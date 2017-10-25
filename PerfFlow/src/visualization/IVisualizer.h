@@ -9,6 +9,7 @@ class ProcessSample;
 class IVisualizer
 {
 public:
+	IVisualizer() = default;
 	virtual ~IVisualizer() = default;
 
 	IVisualizer(const IVisualizer& other) = default;

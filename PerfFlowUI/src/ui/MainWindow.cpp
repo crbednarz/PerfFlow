@@ -10,6 +10,7 @@
 #include "sampling/SamplerOutputQueue.h"
 #include "sampling/SamplingTask.h"
 #include "VisualizerPane.h"
+#include "visualizers/TestVisualizer.h"
 
 
 enum
@@ -24,8 +25,10 @@ wxEND_EVENT_TABLE()
 
 
 
-PerfFlow::MainWindow::MainWindow(const wxString& title, const wxPoint& position, const wxSize& size)
-	: wxFrame(nullptr, wxID_ANY, title, position, size)
+PerfFlow::MainWindow::MainWindow(const wxString& title, const wxPoint& position, const wxSize& size) : 
+	wxFrame(nullptr, wxID_ANY, title, position, size),
+	_symbolRepository(std::make_shared<SymbolRepository>()),
+	_samplerOutput(std::make_shared<SamplerOutputQueue>(1000))
 {
 	auto menuFile = new wxMenu;
 	menuFile->Append(MenuIdAttachToProcess, "&Attach To Process...\tCtrl-O");
@@ -33,8 +36,10 @@ PerfFlow::MainWindow::MainWindow(const wxString& title, const wxPoint& position,
 	menuFile->Append(wxID_EXIT);
 	auto menuBar = new wxMenuBar;
 	menuBar->Append(menuFile, "&File");
-	new VisualizerPane(this);
 	SetMenuBar(menuBar);
+
+
+	_visualizerPane = new VisualizerPane(this, _samplerOutput);
 }
 
 
@@ -51,41 +56,12 @@ void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
 	}
 
 	auto sampler = std::make_unique<ComSampler>(process);
-	auto symbols = std::make_shared<SymbolRepository>();
-	auto samples = std::make_shared<SamplerOutputQueue>(1000);
-	sampler->setSymbolOutput(symbols);
+	sampler->setSymbolOutput(_symbolRepository);
 
-	auto samplingTask = std::make_unique<SamplingTask>(std::move(sampler), samples);
+	_samplingTask = std::make_unique<SamplingTask>(std::move(sampler), _samplerOutput);
+	_samplingTask->begin();
 
-	samplingTask->begin();
-
-	int c = 0;
-
-	while (true)
-	{
-		
-		if (!samples->canPeek())
-			continue;
-
-		auto sample = samples->peek();
-
-		for (size_t threadIndex = 0; threadIndex < sample.threadCount(); threadIndex++)
-		{
-			const auto& thread = sample.getThread(threadIndex);
-
-			for (size_t frameIndex = 0; frameIndex < thread.frameCount(); frameIndex++)
-			{
-				auto& frame = thread.getFrame(frameIndex);
-				wxLogMessage(symbols->tryGetSymbol(frame.getSymbolId())->name().c_str());
-			}
-		}
-
-		samples->pop();
-		c++;
-
-		if (c == 1000)
-			return;
-	}
+	_visualizerPane->setVisualizer(std::make_unique<TestVisualizer>(_symbolRepository));
 }
 
 

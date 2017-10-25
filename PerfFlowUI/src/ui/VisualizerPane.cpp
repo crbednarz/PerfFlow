@@ -1,16 +1,19 @@
 #include "stdafx.h"
 #include "VisualizerPane.h"
 #include "visualization/IVisualizer.h"
+#include "sampling/SamplerOutputQueue.h"
 
 
 wxBEGIN_EVENT_TABLE(PerfFlow::VisualizerPane, wxGLCanvas)
 	EVT_PAINT(PerfFlow::VisualizerPane::onPaint)
 	EVT_SIZE(PerfFlow::VisualizerPane::onSize)
+	EVT_IDLE(PerfFlow::VisualizerPane::onIdle)
 wxEND_EVENT_TABLE()
 
 
-PerfFlow::VisualizerPane::VisualizerPane(wxFrame* parent) :
-	wxGLCanvas(parent)
+PerfFlow::VisualizerPane::VisualizerPane(wxFrame* parent, std::shared_ptr<SamplerOutputQueue> samplerOutput) :
+	wxGLCanvas(parent),
+	_samplerOutput(samplerOutput)
 {
 
 	wxGLContextAttrs contextAttributes;
@@ -36,14 +39,9 @@ PerfFlow::VisualizerPane::VisualizerPane(wxFrame* parent) :
 
 void PerfFlow::VisualizerPane::onPaint(wxPaintEvent& paintEvent)
 {
-	oglplus::Context gl;
 	wxPaintDC dc(this);
 
-	gl.ClearColor(0.0f, 1.0f, 1.0f, 1.0f);
-	gl.Clear().ColorBuffer();
-
-
-	SwapBuffers();
+	render();
 }
 
 
@@ -53,7 +51,37 @@ void PerfFlow::VisualizerPane::onSize(wxSizeEvent& sizeEvent)
 }
 
 
+void PerfFlow::VisualizerPane::onIdle(wxIdleEvent& idleEvent)
+{
+	wxClientDC dc(this);
+	render();
+	idleEvent.RequestMore(); // render continuously, not only once on idle
+}
+
+
 void PerfFlow::VisualizerPane::setVisualizer(std::unique_ptr<IVisualizer> visualizer)
 {
 	_visualizer = std::move(visualizer);
+}
+
+void PerfFlow::VisualizerPane::render()
+{
+
+	oglplus::Context gl;
+
+	gl.ClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+	gl.Clear().ColorBuffer();
+
+	if (_visualizer)
+	{
+		while (_samplerOutput->canPeek())
+		{
+			_visualizer->onSampleReceived(_samplerOutput->peek());
+			_samplerOutput->pop();
+		}
+
+		_visualizer->render();
+	}
+
+	SwapBuffers();
 }
