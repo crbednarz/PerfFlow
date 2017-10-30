@@ -84,6 +84,9 @@
     <ClInclude Include="src\utilities\GLIncludes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\sampling\SamplingContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -129,6 +132,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\sampling\SamplingTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sampling\SamplingContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

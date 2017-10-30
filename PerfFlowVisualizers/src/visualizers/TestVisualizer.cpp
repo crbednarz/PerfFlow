@@ -3,8 +3,8 @@
 #include "sampling/ProcessSample.h"
 
 
-PerfFlow::TestVisualizer::TestVisualizer(std::shared_ptr<SymbolRepository> symbolRepository) :
-	_symbolRepository(symbolRepository),
+PerfFlow::TestVisualizer::TestVisualizer(std::shared_ptr<SamplingContext> context) :
+	_context(context),
 	_isInitialized(false),
 	_vertexShader(oglplus::ShaderType::Vertex),
 	_fragmentShader(oglplus::ShaderType::Fragment),

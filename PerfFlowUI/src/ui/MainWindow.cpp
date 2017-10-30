@@ -5,12 +5,11 @@
 #include "sampling/ProcessSample.h"
 #include "system/Process.h"
 #include <memory>
-#include <thread>
-#include <chrono>
 #include "sampling/SamplerOutputQueue.h"
 #include "sampling/SamplingTask.h"
 #include "VisualizerPane.h"
 #include "visualizers/TestVisualizer.h"
+#include "sampling/SamplingContext.h"
 
 
 enum
@@ -55,13 +54,13 @@ void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
 			process = processEntry;
 	}
 
-	auto sampler = std::make_unique<ComSampler>(process);
-	sampler->setSymbolOutput(_symbolRepository);
+	auto context = std::make_shared<SamplingContext>(process);
 
+	auto sampler = std::make_unique<ComSampler>(context);
 	_samplingTask = std::make_unique<SamplingTask>(std::move(sampler), _samplerOutput);
 	_samplingTask->begin();
 
-	_visualizerPane->setVisualizer(std::make_unique<TestVisualizer>(_symbolRepository));
+	_visualizerPane->setVisualizer(std::make_unique<TestVisualizer>(context));
 }
 
 

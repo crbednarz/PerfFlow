@@ -6,14 +6,13 @@
 
 namespace PerfFlow
 {
-	
-	
-class SymbolRepository;
+class SamplingContext;
+
 
 class TestVisualizer : public IVisualizer
 {
 public:
-	explicit TestVisualizer(std::shared_ptr<SymbolRepository> symbolRepository);
+	explicit TestVisualizer(std::shared_ptr<SamplingContext> symbolRepository);
 
 	void onSampleReceived(const ProcessSample& sample) override;
 
@@ -24,7 +23,7 @@ private:
 	static const int GRID_WIDTH = 64;
 	static const int GRID_HEIGHT = 64;
 
-	std::shared_ptr<SymbolRepository> _symbolRepository;
+	std::shared_ptr<SamplingContext> _context;
 	bool _isInitialized;
 
 	oglplus::Shader _vertexShader;

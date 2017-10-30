@@ -5,24 +5,21 @@
 
 namespace PerfFlow
 {
-	
+class SamplingContext;
 
 /// Sampler based on the COM IDebugClient component.
 class ComSampler : public ISampler
 {
 public:
-	explicit ComSampler(const Process& process);
+	explicit ComSampler(std::shared_ptr<SamplingContext> context);
 
 	void sample(ProcessSample& outputSample) override;
-
-	void setSymbolOutput(std::shared_ptr<SymbolRepository> symbolRepository) override;
-	void clearSymbolOutput() override;
 
 private:
 	DebugClient _debugClient;
 
 	std::vector<ComThreadSample> _rawThreadSamples;
-	std::shared_ptr<SymbolRepository> _symbolRepository;
+	std::shared_ptr<SamplingContext> _context;
 };
 
 

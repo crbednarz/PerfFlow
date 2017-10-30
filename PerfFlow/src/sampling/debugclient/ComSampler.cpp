@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "ComSampler.h"
 #include "sampling/ProcessSample.h"
+#include "sampling/SamplingContext.h"
 
-
-PerfFlow::ComSampler::ComSampler(const Process& process) :
-	_debugClient(process)
+PerfFlow::ComSampler::ComSampler(std::shared_ptr<SamplingContext> context) :
+	_debugClient(context->process()),
+	_context(context)
 {
 }
 
@@ -20,19 +21,6 @@ void PerfFlow::ComSampler::sample(ProcessSample& outputSample)
 
 		rawThreadSample.copyTo(thread);
 
-		if (_symbolRepository != nullptr)
-			_debugClient.exportSymbols(thread, *_symbolRepository);
+		_debugClient.exportSymbols(thread, _context->symbols());
 	}
-}
-
-
-void PerfFlow::ComSampler::setSymbolOutput(std::shared_ptr<SymbolRepository> symbolRepository)
-{
-	_symbolRepository = symbolRepository;
-}
-
-
-void PerfFlow::ComSampler::clearSymbolOutput()
-{
-	_symbolRepository = nullptr;
 }
