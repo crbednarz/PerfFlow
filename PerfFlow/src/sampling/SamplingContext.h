@@ -5,7 +5,6 @@
 
 namespace PerfFlow
 {
-class SymbolRepository;
 	
 
 class SamplingContext

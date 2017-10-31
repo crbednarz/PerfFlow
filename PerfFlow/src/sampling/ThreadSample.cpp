@@ -9,14 +9,6 @@ PerfFlow::ThreadSample::ThreadSample() :
 }
 
 
-void PerfFlow::ThreadSample::setSymbolForFrame(size_t index, SymbolId symbol)
-{
-	assert(index < _frameCount);
-
-	_frames[index].setSymbolId(symbol);
-}
-
-
 void PerfFlow::ThreadSample::push(StackFrame stackFrame)
 {
 	assert(_frameCount != MaxFrames);

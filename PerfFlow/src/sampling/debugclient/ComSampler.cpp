@@ -19,8 +19,6 @@ void PerfFlow::ComSampler::sample(ProcessSample& outputSample)
 		auto& thread = outputSample.addThread();
 		auto& rawThreadSample = _rawThreadSamples[threadIndex];
 
-		rawThreadSample.copyTo(thread);
-
-		_debugClient.exportFrameSymbols(thread, _context->symbols());
+		_debugClient.exportSample(rawThreadSample, thread, *_context);
 	}
 }

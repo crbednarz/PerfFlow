@@ -69,30 +69,19 @@ void PerfFlow::DebugClient::sample(std::vector<ComThreadSample>& outputThreads)
 }
 
 
-void PerfFlow::DebugClient::exportFrameSymbols(ThreadSample& thread, SymbolRepository& symbolRepository) const
+void PerfFlow::DebugClient::exportSample(const ComThreadSample& rawSample, ThreadSample& outputSample, SamplingContext& context) const
 {
-	const ULONG NAME_BUFFER_SIZE = 64;
-	char nameBuffer[NAME_BUFFER_SIZE];
+	const auto& rawCallStack = rawSample.callstack();
 
-	for (size_t i = 0; i < thread.frameCount(); i++)
+	for (size_t frameIndex = 0; frameIndex < rawCallStack.frameCount(); ++frameIndex)
 	{
-		auto frame = thread.getFrame(i);
-		
-		ULONG nameSize;
-		ULONG64 displacement;
-		if (FAILED(_symbols->GetNameByOffset(frame.instructionPointer(),
-			nameBuffer,
-			NAME_BUFFER_SIZE,
-			&nameSize,
-			&displacement)))
-			continue;
+		const auto& rawFrame = rawCallStack.getFrame(frameIndex);
+		auto instructionPointer = rawFrame.InstructionOffset;
+		auto symbolId = createInstructionSymbols(instructionPointer, context);
 
-		SymbolId symbolId(frame.instructionPointer() - displacement);
-		if (!symbolRepository.hasSymbol(symbolId))
-			symbolRepository.addSymbol(symbolId, Symbol(std::string(nameBuffer, nameSize)));
-
-		thread.setSymbolForFrame(i, symbolId);
+		outputSample.push(StackFrame(instructionPointer, symbolId));
 	}
+
 }
 
 
@@ -104,4 +93,28 @@ bool PerfFlow::DebugClient::waitForClientToAttach(const ComPtr<IDebugControl>& d
 	// However in practice it seems to have no effect either way.
 	// debugControl->SetExecutionStatus(DEBUG_STATUS_GO);
 	return ComHelper::succeeded(debugControl->WaitForEvent(DEBUG_WAIT_DEFAULT, INFINITE));
+}
+
+
+PerfFlow::SymbolId PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instructionPointer, SamplingContext& context) const
+{
+	const ULONG NAME_BUFFER_SIZE = 128;
+	char nameBuffer[NAME_BUFFER_SIZE];
+
+	ULONG nameSize;
+	ULONG64 displacement;
+	if (FAILED(_symbols->GetNameByOffset(instructionPointer,
+		nameBuffer,
+		NAME_BUFFER_SIZE,
+		&nameSize,
+		&displacement)))
+		return SymbolId::None;
+
+	SymbolId symbolId(instructionPointer - displacement);
+	auto& symbols = context.symbols();
+
+	if (!symbols.hasSymbol(symbolId))
+		symbols.addSymbol(symbolId, Symbol(std::string(nameBuffer, nameSize)));
+
+	return symbolId;
 }

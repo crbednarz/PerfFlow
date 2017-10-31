@@ -6,6 +6,7 @@
 #include "ComThreadSample.h"
 #include "symbols/SymbolRepository.h"
 #include <memory>
+#include "sampling/SamplingContext.h"
 
 
 namespace PerfFlow
@@ -22,7 +23,8 @@ public:
 	void sample(std::vector<ComThreadSample>& outputCallstacks);
 
 	bool isValid() const;
-	void exportFrameSymbols(ThreadSample& thread, SymbolRepository& symbolRepository) const;
+
+	void exportSample(const ComThreadSample& rawSample, ThreadSample& outputSample, SamplingContext& context) const;
 
 private:
 	bool _isValid;
@@ -33,6 +35,8 @@ private:
 	std::vector<ULONG> _threadIds;
 
 	static bool waitForClientToAttach(const ComPtr<IDebugControl>& debugControl);
+
+	SymbolId createInstructionSymbols(ULONG64 instructionPointer, SamplingContext& context) const;
 };
 
 

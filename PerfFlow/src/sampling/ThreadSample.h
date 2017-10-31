@@ -15,7 +15,6 @@ public:
 
 	ThreadSample();
 	
-	void setSymbolForFrame(size_t index, SymbolId symbol);
 	void push(StackFrame stackFrame);
 	void clear();
 
