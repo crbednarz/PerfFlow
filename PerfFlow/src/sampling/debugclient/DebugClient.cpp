@@ -69,7 +69,7 @@ void PerfFlow::DebugClient::sample(std::vector<ComThreadSample>& outputThreads)
 }
 
 
-void PerfFlow::DebugClient::exportSymbols(ThreadSample& thread, SymbolRepository& symbolRepository) const
+void PerfFlow::DebugClient::exportFrameSymbols(ThreadSample& thread, SymbolRepository& symbolRepository) const
 {
 	const ULONG NAME_BUFFER_SIZE = 64;
 	char nameBuffer[NAME_BUFFER_SIZE];
@@ -90,6 +90,7 @@ void PerfFlow::DebugClient::exportSymbols(ThreadSample& thread, SymbolRepository
 		SymbolId symbolId(frame.instructionPointer() - displacement);
 		if (!symbolRepository.hasSymbol(symbolId))
 			symbolRepository.addSymbol(symbolId, Symbol(std::string(nameBuffer, nameSize)));
+
 		thread.setSymbolForFrame(i, symbolId);
 	}
 }

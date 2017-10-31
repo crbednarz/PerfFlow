@@ -22,7 +22,7 @@ public:
 	void sample(std::vector<ComThreadSample>& outputCallstacks);
 
 	bool isValid() const;
-	void exportSymbols(ThreadSample& thread, SymbolRepository& symbolRepository) const;
+	void exportFrameSymbols(ThreadSample& thread, SymbolRepository& symbolRepository) const;
 
 private:
 	bool _isValid;
@@ -30,7 +30,6 @@ private:
 	ComPtr<IDebugControl> _control;
 	ComPtr<IDebugSystemObjects> _systemObjects;
 	ComPtr<IDebugSymbols> _symbols;
-
 	std::vector<ULONG> _threadIds;
 
 	static bool waitForClientToAttach(const ComPtr<IDebugControl>& debugControl);

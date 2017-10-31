@@ -16,7 +16,6 @@ public:
 
 
 	void addSymbol(SymbolId id, const Symbol& symbol);
-
 	const Symbol* tryGetSymbol(SymbolId id);
 	bool hasSymbol(SymbolId id);
 	
