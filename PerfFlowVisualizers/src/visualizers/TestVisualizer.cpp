@@ -1,15 +1,14 @@
 #include "stdafx.h"
 #include "TestVisualizer.h"
 #include "sampling/ProcessSample.h"
+#include "sampling/SamplingContext.h"
 
 
 PerfFlow::TestVisualizer::TestVisualizer(std::shared_ptr<SamplingContext> context) :
 	_context(context),
 	_isInitialized(false),
 	_vertexShader(oglplus::ShaderType::Vertex),
-	_fragmentShader(oglplus::ShaderType::Fragment),
-	_minAddress(~size_t(0)),
-	_maxAddress(0)
+	_fragmentShader(oglplus::ShaderType::Fragment)
 {
 
 }
@@ -28,17 +27,16 @@ void PerfFlow::TestVisualizer::onSampleReceived(const ProcessSample& sample)
 			auto frame = thread.getFrame(frameIndex);
 
 			auto symbolId = frame.getSymbolId();
+			auto symbol = _context->symbols().tryGet(symbolId);
+
+			if (symbol == nullptr || symbol->processModule().index() != 0)
+				continue;
+
 			size_t address = frame.instructionPointer();
-			if (address < 1000 || address > ~int32_t(0) - 1000)
-				continue;
+			size_t minAddress = symbol->processModule().address();
+			size_t maxAddress = symbol->processModule().size() + minAddress;
 
-			_minAddress = std::min(address, _minAddress);
-			_maxAddress = std::max(address, _maxAddress);
-
-			if (_minAddress == _maxAddress)
-				continue;
-
-			auto relativeAddress = (address - _minAddress) / static_cast<float>(_maxAddress - _minAddress);
+			auto relativeAddress = (address - minAddress) / static_cast<float>(maxAddress - minAddress);
 
 			auto index = static_cast<int>(relativeAddress * (GRID_WIDTH * GRID_HEIGHT - 1));
 			

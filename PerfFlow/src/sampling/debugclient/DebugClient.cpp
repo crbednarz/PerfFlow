@@ -112,6 +112,7 @@ PerfFlow::SymbolId PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instr
 
 	SymbolId symbolId(instructionPointer - displacement);
 	auto& symbols = context.symbols();
+	auto& modules = context.modules();
 
 	if (!symbols.has(symbolId))
 	{
@@ -123,11 +124,45 @@ PerfFlow::SymbolId PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instr
 			&moduleBase)))
 			return SymbolId::None;
 
+		auto processModule = modules.tryGetAtAddress(moduleBase);
+		if (processModule == nullptr)
+		{
+			if (!tryAddModuleWithIndex(moduleIndex, modules))
+				return SymbolId::None;
 
-		symbols.add(symbolId, std::string(nameBuffer, nameSize));
+			processModule = modules.tryGetAtAddress(moduleBase);
+		}
+
+		symbols.add(symbolId, std::string(nameBuffer, nameSize), processModule);
 	}
 
 
 
 	return symbolId;
+}
+
+
+bool PerfFlow::DebugClient::tryAddModuleWithIndex(ULONG moduleIndex, ModuleRepository& modules) const
+{
+
+	DEBUG_MODULE_PARAMETERS parameters;
+	if (FAILED(_symbols->GetModuleParameters(
+		1,
+		NULL,
+		moduleIndex,
+		&parameters)))
+		return false;
+
+	std::string name(parameters.ModuleNameSize, ' ');
+	
+	if (FAILED(_symbols->GetModuleNames(
+		moduleIndex, 0,
+		NULL, 0, NULL, // Image Name 
+		&name[0], static_cast<ULONG>(name.size()), NULL, // Module Name,
+		NULL, 0, NULL))) // Loaded Image Name
+		return false;
+
+	modules.add(name, parameters.Base, parameters.Size, moduleIndex);
+
+	return true;
 }

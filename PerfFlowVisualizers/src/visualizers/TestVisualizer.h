@@ -37,9 +37,6 @@ private:
 
 	std::vector<GLfloat> _colorData;
 
-	size_t _minAddress;
-	size_t _maxAddress;
-
 	void ensureInitialized();
 };
 

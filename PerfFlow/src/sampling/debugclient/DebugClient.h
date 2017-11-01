@@ -4,8 +4,6 @@
 #include "utilities/ComIncludes.h"
 #include <vector>
 #include "ComThreadSample.h"
-#include "symbols/SymbolRepository.h"
-#include <memory>
 #include "sampling/SamplingContext.h"
 
 
@@ -37,6 +35,7 @@ private:
 	static bool waitForClientToAttach(const ComPtr<IDebugControl>& debugControl);
 
 	SymbolId createInstructionSymbols(ULONG64 instructionPointer, SamplingContext& context) const;
+	bool tryAddModuleWithIndex(ULONG moduleIndex, ModuleRepository& modules) const;
 };
 
 
