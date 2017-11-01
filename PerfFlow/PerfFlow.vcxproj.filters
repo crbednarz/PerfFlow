@@ -87,6 +87,12 @@
     <ClInclude Include="src\sampling\SamplingContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\symbols\ProcessModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\symbols\ModuleRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -135,6 +141,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\sampling\SamplingContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\symbols\ProcessModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\symbols\ModuleRepository.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "symbols/SymbolRepository.h"
+#include "symbols/ModuleRepository.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace PerfFlow;
@@ -14,18 +14,18 @@ namespace PerfFlowTests
 
 		TEST_METHOD(emptyOnConstruction)
 		{
-			SymbolRepository repo;
+			ModuleRepository repo;
 
 			Assert::AreEqual(size_t(0), repo.count());
 		}
 
 		TEST_METHOD(canAddSymbols)
 		{
-			SymbolRepository repo;
+			ModuleRepository repo;
 
 			for (size_t i = 0; i < 10; i++)
 			{
-				repo.add(SymbolId(i), std::to_string(i), 0);
+				repo.add(std::to_string(i), i, 1, i);
 
 				Assert::AreEqual(i + 1, repo.count());
 			}
@@ -33,14 +33,14 @@ namespace PerfFlowTests
 
 		TEST_METHOD(canRetrieveSymbol)
 		{
-			SymbolRepository repo;
+			ModuleRepository repo;
 
 			for (size_t i = 0; i < 10; i++)
-				repo.add(SymbolId(i), std::to_string(i), 0);
+				repo.add(std::to_string(i), i, 1, i);
 
 			for (size_t i = 0; i < 10; i++)
 			{
-				auto symbol = repo.tryGet(SymbolId(i));
+				auto symbol = repo.tryGetAtAddress(i);
 				Assert::IsNotNull(symbol);
 			}
 		}

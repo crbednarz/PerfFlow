@@ -50,5 +50,8 @@
     <ClCompile Include="tests\sampling\SamplingTaskTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tests\symbols\ModuleRepositoryTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

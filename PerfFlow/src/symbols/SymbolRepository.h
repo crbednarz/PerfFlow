@@ -7,19 +7,18 @@
 
 namespace PerfFlow
 {
-	
+class ProcessModule;
+
 
 class SymbolRepository
 {
 public:
 	SymbolRepository() = default;
 
-
-	void addSymbol(SymbolId id, const Symbol& symbol);
-	const Symbol* tryGetSymbol(SymbolId id);
-	bool hasSymbol(SymbolId id);
-	
-	size_t totalSymbols();
+	void add(SymbolId id, const std::string& name, const ProcessModule* processModule = nullptr);
+	const Symbol* tryGet(SymbolId id);
+	bool has(SymbolId id);
+	size_t count();
 
 private:
 	std::unordered_map<SymbolId, Symbol> _symbols;

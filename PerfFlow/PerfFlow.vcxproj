@@ -95,6 +95,8 @@
     <ClInclude Include="src\sampling\SamplingTask.h" />
     <ClInclude Include="src\sampling\StackFrame.h" />
     <ClInclude Include="src\sampling\ThreadSample.h" />
+    <ClInclude Include="src\symbols\ModuleRepository.h" />
+    <ClInclude Include="src\symbols\ProcessModule.h" />
     <ClInclude Include="src\symbols\Symbol.h" />
     <ClInclude Include="src\symbols\SymbolId.h" />
     <ClInclude Include="src\symbols\SymbolRepository.h" />
@@ -121,6 +123,8 @@
     <ClCompile Include="src\sampling\SamplingTask.cpp" />
     <ClCompile Include="src\sampling\StackFrame.cpp" />
     <ClCompile Include="src\sampling\ThreadSample.cpp" />
+    <ClCompile Include="src\symbols\ModuleRepository.cpp" />
+    <ClCompile Include="src\symbols\ProcessModule.cpp" />
     <ClCompile Include="src\symbols\Symbol.cpp" />
     <ClCompile Include="src\symbols\SymbolId.cpp" />
     <ClCompile Include="src\symbols\SymbolRepository.cpp" />

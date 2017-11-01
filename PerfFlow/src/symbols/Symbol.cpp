@@ -3,7 +3,8 @@
 
 
 
-PerfFlow::Symbol::Symbol(const std::string& name) :
-	_name(name)
+PerfFlow::Symbol::Symbol(const std::string& name, const ProcessModule* processModule) :
+	_name(name),
+	_processModule(processModule)
 {
 }

@@ -113,8 +113,21 @@ PerfFlow::SymbolId PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instr
 	SymbolId symbolId(instructionPointer - displacement);
 	auto& symbols = context.symbols();
 
-	if (!symbols.hasSymbol(symbolId))
-		symbols.addSymbol(symbolId, Symbol(std::string(nameBuffer, nameSize)));
+	if (!symbols.has(symbolId))
+	{
+		ULONG moduleIndex;
+		ULONG64 moduleBase;
+		if (FAILED(_symbols->GetModuleByOffset(instructionPointer,
+			0,
+			&moduleIndex,
+			&moduleBase)))
+			return SymbolId::None;
+
+
+		symbols.add(symbolId, std::string(nameBuffer, nameSize));
+	}
+
+
 
 	return symbolId;
 }
