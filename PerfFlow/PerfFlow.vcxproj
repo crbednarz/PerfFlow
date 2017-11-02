@@ -56,7 +56,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;src/;../Libraries/glad/include/;../Libraries/oglplus/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;src/;../Libraries/glad/include/;../Libraries/oglplus/include/;../Libraries/oglplus/implement/;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -73,7 +73,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;src/;../Libraries/glad/include/;../Libraries/oglplus/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;src/;../Libraries/glad/include/;../Libraries/oglplus/include/;../Libraries/oglplus/implement/;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -84,6 +84,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\graphics\BasicShaderProgram.h" />
     <ClInclude Include="src\sampling\debugclient\ComCallStack.h" />
     <ClInclude Include="src\sampling\debugclient\ComSampler.h" />
     <ClInclude Include="src\sampling\debugclient\ComThreadSample.h" />
@@ -113,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PerfFlow.cpp" />
+    <ClCompile Include="src\graphics\BasicShaderProgram.cpp" />
     <ClCompile Include="src\sampling\debugclient\ComCallStack.cpp" />
     <ClCompile Include="src\sampling\debugclient\ComSampler.cpp" />
     <ClCompile Include="src\sampling\debugclient\ComThreadSample.cpp" />

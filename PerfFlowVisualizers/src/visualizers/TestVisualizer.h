@@ -2,6 +2,7 @@
 #include "visualization/IVisualizer.h"
 #include <memory>
 #include "utilities/GLIncludes.h"
+#include "graphics/BasicShaderProgram.h"
 
 
 namespace PerfFlow
@@ -26,9 +27,7 @@ private:
 	std::shared_ptr<SamplingContext> _context;
 	bool _isInitialized;
 
-	oglplus::Shader _vertexShader;
-	oglplus::Shader _fragmentShader;
-	oglplus::Program _shaderProgram;
+	BasicShaderProgram _shader;
 
 	oglplus::VertexArray _vertexVAO;
 	oglplus::Buffer _positions;

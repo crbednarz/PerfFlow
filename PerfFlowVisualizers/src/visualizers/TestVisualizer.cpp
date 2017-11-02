@@ -6,9 +6,7 @@
 
 PerfFlow::TestVisualizer::TestVisualizer(std::shared_ptr<SamplingContext> context) :
 	_context(context),
-	_isInitialized(false),
-	_vertexShader(oglplus::ShaderType::Vertex),
-	_fragmentShader(oglplus::ShaderType::Fragment)
+	_isInitialized(false)
 {
 
 }
@@ -28,8 +26,8 @@ void PerfFlow::TestVisualizer::onSampleReceived(const ProcessSample& sample)
 
 			auto symbolId = frame.getSymbolId();
 			auto symbol = _context->symbols().tryGet(symbolId);
-
-			if (symbol == nullptr || symbol->processModule().index() != 0)
+			
+			if (symbol == nullptr)
 				continue;
 
 			size_t address = frame.instructionPointer();
@@ -87,7 +85,7 @@ void PerfFlow::TestVisualizer::ensureInitialized()
 	if (_isInitialized)
 		return;
 
-	 _vertexShader.Source(" \
+	_shader.build(" \
 		#version 120\n \
 		attribute vec3 aPosition; \
 		attribute vec4 aColor; \
@@ -97,20 +95,15 @@ void PerfFlow::TestVisualizer::ensureInitialized()
 			vColor = aColor; \
 			gl_Position = vec4(aPosition, 1.0); \
 		} \
-		").Compile(std::nothrow).Done();
-
-	_fragmentShader.Source("\
+		",
+		"\
 		#version 120\n \
 		varying vec4 vColor; \
 		void main(void) \
 		{ \
 			gl_FragColor = vColor; \
 		} \
-	").Compile(std::nothrow).Done();
-
-	_shaderProgram.AttachShaders(MakeGroup(_vertexShader, _fragmentShader));
-	_shaderProgram.Link();
-	_shaderProgram.Use();
+		");
 
 	_vertexVAO.Bind();
 
@@ -136,18 +129,13 @@ void PerfFlow::TestVisualizer::ensureInitialized()
 	_positions.Bind(Buffer::Target::Array);
 	Buffer::Data(Buffer::Target::Array, positions.size(), positions.data());
 	
-	VertexArrayAttrib vertexAttribute(_shaderProgram, "aPosition");
-	vertexAttribute.Setup<GLfloat>(3);
-	vertexAttribute.Enable();
+	_shader.enableVertexAttribute<GLfloat>("aPosition", 3);
 
 
 	_colors.Bind(Buffer::Target::Array);
 	Buffer::Data(Buffer::Target::Array, _colorData.size(), _colorData.data());
 
-	VertexArrayAttrib colorAttribute(_shaderProgram, "aColor");
-	colorAttribute.Setup<GLfloat>(4);
-	colorAttribute.Enable();
-
+	_shader.enableVertexAttribute<GLfloat>("aColor", 4);
 
 	std::vector<GLuint> indices((GRID_WIDTH - 1) * (GRID_HEIGHT - 1) * 6);
 
