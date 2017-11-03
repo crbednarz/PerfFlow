@@ -20,8 +20,8 @@ public:
 private:
 	std::unique_ptr<ISampler> _sampler;
 	std::shared_ptr<SamplerOutputQueue> _outputQueue;
-	volatile bool _shouldEnd;
-	volatile bool _isThreadRunning;
+	std::atomic<bool> _shouldEnd;
+	std::atomic<bool> _isThreadRunning;
 	std::thread _samplingThread;
 
 	void waitForThreadShutdown() const;

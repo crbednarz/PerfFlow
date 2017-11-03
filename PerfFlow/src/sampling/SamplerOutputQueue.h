@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "ProcessSample.h"
+#include <atomic>
 
 
 namespace PerfFlow
@@ -38,10 +39,10 @@ private:
 	std::vector<ProcessSample> _samples;
 
 	/// The oldest in-use index.
-	volatile uint32_t _top;
+	std::atomic<uint32_t> _top;
 
 	/// The next available index
-	volatile uint32_t _bottom;
+	std::atomic<uint32_t> _bottom;
 
 	uint32_t nextListIndex(uint32_t index) const;
 
