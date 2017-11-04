@@ -32,8 +32,8 @@ private:
 	oglplus::Buffer _colorBuffer;
 	oglplus::Buffer _indexBuffer;
 
-	std::vector<glm::vec2> _positionData;
-	std::vector<glm::vec4> _colorData;
+	std::vector<oglplus::Vec2f> _positionData;
+	std::vector<oglplus::Vec4f> _colorData;
 
 	void setup();
 };

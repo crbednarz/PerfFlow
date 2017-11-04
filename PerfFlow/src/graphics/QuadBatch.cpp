@@ -14,15 +14,15 @@ PerfFlow::QuadBatch::QuadBatch(size_t capacity) :
 
 void PerfFlow::QuadBatch::add(glm::vec2 position, glm::vec2 size)
 {
-	_positionData[_count * 4 + 0] = position;
-	_positionData[_count * 4 + 1] = position + glm::vec2(size.x, 0.0f);
-	_positionData[_count * 4 + 2] = position + glm::vec2(0.0f, size.y);
-	_positionData[_count * 4 + 3] = position + glm::vec2(size.x, size.y);
+	_positionData[_count * 4 + 0] = oglplus::Vec2f(position.x, position.y);
+	_positionData[_count * 4 + 1] = oglplus::Vec2f(position.x + size.x, position.y);
+	_positionData[_count * 4 + 2] = oglplus::Vec2f(position.x, position.y + size.y);
+	_positionData[_count * 4 + 3] = oglplus::Vec2f(position.x + size.x, position.y + size.y);
 
-	_colorData[_count * 4 + 0] = glm::vec4(1.0f);
-	_colorData[_count * 4 + 1] = glm::vec4(1.0f);
-	_colorData[_count * 4 + 2] = glm::vec4(1.0f);
-	_colorData[_count * 4 + 3] = glm::vec4(1.0f);
+	_colorData[_count * 4 + 0] = oglplus::Vec4f(1.0f);
+	_colorData[_count * 4 + 1] = oglplus::Vec4f(1.0f);
+	_colorData[_count * 4 + 2] = oglplus::Vec4f(1.0f);
+	_colorData[_count * 4 + 3] = oglplus::Vec4f(1.0f);
 
 	_count++;
 }
@@ -84,11 +84,11 @@ void PerfFlow::QuadBatch::setup()
 
 	_positionBuffer.Bind(Buffer::Target::Array);
 	Buffer::Resize(Buffer::Target::Array, _positionData.capacity());
-	_shader.enableVertexAttribute<glm::vec2>("aPosition", 1);
+	_shader.enableVertexAttribute<Vec2f>("aPosition", 1);
 
 	_colorBuffer.Bind(Buffer::Target::Array);
 	Buffer::Resize(Buffer::Target::Array, _colorData.capacity());
-	_shader.enableVertexAttribute<glm::vec4>("aColor", 1);
+	_shader.enableVertexAttribute<Vec4f>("aColor", 1);
 
 
 	std::vector<GLuint> indices(_capacity * 6);
