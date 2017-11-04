@@ -13,10 +13,18 @@ PerfFlow::SamplingTask::SamplingTask(std::unique_ptr<ISampler> sampler, std::sha
 }
 
 
+PerfFlow::SamplingTask::~SamplingTask()
+{
+	if (_isThreadRunning)
+		end();
+}
+
+
 void PerfFlow::SamplingTask::begin()
 {
 	assert(!_isThreadRunning);
 
+	_isThreadRunning = true;
 	_samplingThread = std::thread([this]()
 	{
 		while (!_shouldEnd)

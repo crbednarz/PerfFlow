@@ -13,6 +13,12 @@ class SamplingTask
 {
 public:
 	SamplingTask(std::unique_ptr<ISampler> sampler, std::shared_ptr<SamplerOutputQueue> outputQueue);
+	~SamplingTask();
+
+	SamplingTask(const SamplingTask& other) = default;
+	SamplingTask(SamplingTask&& other) = default;
+	SamplingTask& operator=(const SamplingTask& other) = default;
+	SamplingTask& operator=(SamplingTask&& other) = default;
 
 	void begin();
 	void end();
