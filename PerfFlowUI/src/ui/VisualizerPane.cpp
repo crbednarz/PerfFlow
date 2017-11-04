@@ -70,7 +70,7 @@ void PerfFlow::VisualizerPane::render()
 
 	oglplus::Context gl;
 
-	gl.ClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+	gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	gl.Clear().ColorBuffer();
 
 	if (_visualizer)
