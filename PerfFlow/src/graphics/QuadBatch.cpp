@@ -12,23 +12,25 @@ PerfFlow::QuadBatch::QuadBatch(size_t capacity) :
 }
 
 
-void PerfFlow::QuadBatch::add(oglplus::Vec2f position, oglplus::Vec2f size)
+void PerfFlow::QuadBatch::add(glm::vec2 position, glm::vec2 size)
 {
-	using namespace oglplus;
-
 	_positionData[_count * 4 + 0] = position;
-	_positionData[_count * 4 + 1] = position + Vec2f(size.x(), 0.0f);
-	_positionData[_count * 4 + 2] = position + Vec2f(0.0f, size.y());
-	_positionData[_count * 4 + 3] = position + Vec2f(size.x(), size.y());
+	_positionData[_count * 4 + 1] = position + glm::vec2(size.x, 0.0f);
+	_positionData[_count * 4 + 2] = position + glm::vec2(0.0f, size.y);
+	_positionData[_count * 4 + 3] = position + glm::vec2(size.x, size.y);
 
+	_colorData[_count * 4 + 0] = glm::vec4(1.0f);
+	_colorData[_count * 4 + 1] = glm::vec4(1.0f);
+	_colorData[_count * 4 + 2] = glm::vec4(1.0f);
+	_colorData[_count * 4 + 3] = glm::vec4(1.0f);
 
-
-	_colorData[_count * 4 + 0] = Vec4f(1.0f);
-	_colorData[_count * 4 + 1] = Vec4f(1.0f);
-	_colorData[_count * 4 + 2] = Vec4f(1.0f);
-	_colorData[_count * 4 + 3] = Vec4f(1.0f);
 	_count++;
-	
+}
+
+
+void PerfFlow::QuadBatch::clear()
+{
+	_count = 0;
 }
 
 
@@ -41,10 +43,10 @@ void PerfFlow::QuadBatch::draw() const
 	
 	_vertexVAO.Bind();
 	_positionBuffer.Bind(Buffer::Target::Array);
-	Buffer::SubData(Buffer::Target::Array, 0, _count * 4, _positionData.data());
+	Buffer::Data(Buffer::Target::Array, _count * 4, _positionData.data());
 
 	_colorBuffer.Bind(Buffer::Target::Array);
-	Buffer::SubData(Buffer::Target::Array, 0, _count * 4, _colorData.data());
+	Buffer::Data(Buffer::Target::Array, _count * 4, _colorData.data());
 
 	Context gl;
 	gl.DrawElements(
@@ -82,11 +84,11 @@ void PerfFlow::QuadBatch::setup()
 
 	_positionBuffer.Bind(Buffer::Target::Array);
 	Buffer::Resize(Buffer::Target::Array, _positionData.capacity());
-	_shader.enableVertexAttribute<Vec2f>("aPosition", 1);
+	_shader.enableVertexAttribute<glm::vec2>("aPosition", 1);
 
 	_colorBuffer.Bind(Buffer::Target::Array);
 	Buffer::Resize(Buffer::Target::Array, _colorData.capacity());
-	_shader.enableVertexAttribute<Vec4f>("aColor", 1);
+	_shader.enableVertexAttribute<glm::vec4>("aColor", 1);
 
 
 	std::vector<GLuint> indices(_capacity * 6);

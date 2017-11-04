@@ -2,6 +2,9 @@
 
 #include "visualization/IVisualizer.h"
 #include <memory>
+#include <unordered_map>
+#include "symbols/SymbolId.h"
+#include "glm.hpp"
 
 
 namespace PerfFlow
@@ -21,8 +24,14 @@ public:
 
 
 private:
+	struct Ball
+	{
+		glm::vec2 _position;
+	};
 	std::shared_ptr<SamplingContext> _context;
 	std::unique_ptr<QuadBatch> _batcher;
+
+	std::unordered_map<SymbolId, Ball> _balls;
 	bool _isInitialized;
 
 	void ensureInitialized();

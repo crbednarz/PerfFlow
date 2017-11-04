@@ -58,7 +58,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../PerfFlowVisualizers/src/;..\PerfFlow\src\;./;src/;../Libraries/wxWidgets/lib/vc_x64_lib/mswu/;../Libraries/wxWidgets/include/;../Libraries/oglplus/include/;../Libraries/oglplus/implement/;../Libraries/glad/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../PerfFlowVisualizers/src/;..\PerfFlow\src\;./;src/;../Libraries/glm/glm/;../Libraries/wxWidgets/lib/vc_x64_lib/mswu/;../Libraries/wxWidgets/include/;../Libraries/oglplus/include/;../Libraries/oglplus/implement/;../Libraries/glad/include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -76,7 +76,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../PerfFlowVisualizers/src/;..\PerfFlow\src\;./;src/;../Libraries/wxWidgets/lib/vc_x64_lib/mswu/;../Libraries/wxWidgets/include/;../Libraries/oglplus/include/;../Libraries/oglplus/implement/;../Libraries/glad/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../PerfFlowVisualizers/src/;..\PerfFlow\src\;./;src/;../Libraries/glm/glm/;../Libraries/wxWidgets/lib/vc_x64_lib/mswu/;../Libraries/wxWidgets/include/;../Libraries/oglplus/include/;../Libraries/oglplus/implement/;../Libraries/glad/include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

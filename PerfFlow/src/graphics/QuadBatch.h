@@ -1,7 +1,7 @@
 #pragma once
 #include "utilities/GLIncludes.h"
 #include "BasicShaderProgram.h"
-
+#include "glm.hpp"
 
 namespace PerfFlow
 {
@@ -12,7 +12,9 @@ class QuadBatch
 public:
 	explicit QuadBatch(size_t capacity);
 
-	void add(oglplus::Vec2f position, oglplus::Vec2f size);
+	void add(glm::vec2 position, glm::vec2 size);
+	void clear();
+
 	void draw() const;
 
 	size_t capacity() const;
@@ -30,8 +32,8 @@ private:
 	oglplus::Buffer _colorBuffer;
 	oglplus::Buffer _indexBuffer;
 
-	std::vector<oglplus::Vec2f> _positionData;
-	std::vector<oglplus::Vec4f> _colorData;
+	std::vector<glm::vec2> _positionData;
+	std::vector<glm::vec4> _colorData;
 
 	void setup();
 };
