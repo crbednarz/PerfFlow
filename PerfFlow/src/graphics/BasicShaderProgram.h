@@ -1,5 +1,6 @@
 #pragma once
 #include "utilities/GLIncludes.h"
+#include "BufferedAttribute.h"
 
 
 namespace PerfFlow
@@ -13,11 +14,19 @@ public:
 	BasicShaderProgram();
 
 	void build(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
+	void use() const;
 
-	template <typename T>
+	oglplus::Program& get();
+
+	template <typename TElementType>
 	void enableVertexAttribute(const std::string& name, GLuint elementCount) const;
 
+	template <typename TElementType>
+	BufferedAttribute<TElementType> createBufferedAttribute(const std::string& name, GLuint elementCount) const;
+
 private:
+	bool _isBuilt;
+
 	oglplus::Shader _vertexShader;
 	oglplus::Shader _fragmentShader;
 	oglplus::Program _shaderProgram;
@@ -34,4 +43,15 @@ void PerfFlow::BasicShaderProgram::enableVertexAttribute(const std::string& name
 	oglplus::VertexArrayAttrib attribute(_shaderProgram, name);
 	attribute.Setup<TElementType>(elementCount);
 	attribute.Enable();
+}
+
+
+template <typename TElementType>
+PerfFlow::BufferedAttribute<TElementType> PerfFlow::BasicShaderProgram::createBufferedAttribute(const std::string& name, GLuint elementCount) const
+{
+	oglplus::VertexArrayAttrib attribute(_shaderProgram, name);
+	attribute.Setup<TElementType>(elementCount);
+	attribute.Enable();
+
+	return BufferedAttribute<TElementType>(attribute);
 }

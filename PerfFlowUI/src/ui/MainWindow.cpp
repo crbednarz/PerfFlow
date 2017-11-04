@@ -8,7 +8,7 @@
 #include "sampling/SamplerOutputQueue.h"
 #include "sampling/SamplingTask.h"
 #include "VisualizerPane.h"
-#include "visualizers/TestVisualizer.h"
+#include "visualizers/Test2Visualizer.h"
 #include "sampling/SamplingContext.h"
 
 
@@ -60,7 +60,7 @@ void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
 	_samplingTask = std::make_unique<SamplingTask>(std::move(sampler), _samplerOutput);
 	_samplingTask->begin();
 
-	_visualizerPane->setVisualizer(std::make_unique<TestVisualizer>(context));
+	_visualizerPane->setVisualizer(std::make_unique<Test2Visualizer>(context));
 }
 
 
