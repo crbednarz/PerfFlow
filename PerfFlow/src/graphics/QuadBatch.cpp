@@ -64,16 +64,20 @@ void PerfFlow::QuadBatch::setup()
 		#version 120\n \
 		attribute vec2 aPosition; \
 		attribute vec4 aColor; \
+		attribute vec2 aTextureCoord; \
 		varying vec4 vColor; \
+		varying vec2 vTextureCoord; \
 		void main(void) \
 		{ \
 			vColor = aColor; \
+			vTextureCoord = aTextureCoord; \
 			gl_Position = vec4(aPosition, 0.0, 1.0); \
 		} \
 		",
 		"\
 		#version 120\n \
 		varying vec4 vColor; \
+		varying vec2 vTextureCoord; \
 		void main(void) \
 		{ \
 			gl_FragColor = vColor; \
@@ -90,6 +94,18 @@ void PerfFlow::QuadBatch::setup()
 	Buffer::Resize(Buffer::Target::Array, _colorData.capacity());
 	_shader.enableVertexAttribute<Vec4f>("aColor", 1);
 
+	std::vector<Vec2f> textureCoords(_capacity * 4);
+	for (auto i = 0; i < _capacity; i++)
+	{
+		textureCoords[i * 4 + 0] = Vec2f(0.0f, 0.0f);
+		textureCoords[i * 4 + 1] = Vec2f(1.0f, 0.0f);
+		textureCoords[i * 4 + 2] = Vec2f(0.0f, 1.0f);
+		textureCoords[i * 4 + 3] = Vec2f(1.0f, 1.0f);
+	}
+
+	_textureBuffer.Bind(Buffer::Target::Array);
+	Buffer::Data(Buffer::Target::Array, textureCoords);
+	_shader.enableVertexAttribute<Vec2f>("aTextureCoord", 1);
 
 	std::vector<GLuint> indices(_capacity * 6);
 	for (auto i = 0; i < _capacity; i++)

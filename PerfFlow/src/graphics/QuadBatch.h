@@ -30,6 +30,7 @@ private:
 
 	oglplus::Buffer _positionBuffer;
 	oglplus::Buffer _colorBuffer;
+	oglplus::Buffer _textureBuffer;
 	oglplus::Buffer _indexBuffer;
 
 	std::vector<oglplus::Vec2f> _positionData;
