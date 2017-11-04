@@ -27,7 +27,11 @@ private:
 	struct Ball
 	{
 		glm::vec2 _position;
+		glm::vec2 _velocity;
+		float _radius;
+		Ball* _attractedTo;
 	};
+
 	std::shared_ptr<SamplingContext> _context;
 	std::unique_ptr<QuadBatch> _batcher;
 
