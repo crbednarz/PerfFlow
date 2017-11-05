@@ -85,6 +85,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\BufferedAttribute.h" />
+    <ClInclude Include="src\graphics\Camera.h" />
     <ClInclude Include="src\graphics\QuadBatch.h" />
     <ClInclude Include="src\graphics\BasicShaderProgram.h" />
     <ClInclude Include="src\sampling\debugclient\ComCallStack.h" />
@@ -117,6 +118,7 @@
   <ItemGroup>
     <ClCompile Include="PerfFlow.cpp" />
     <ClCompile Include="src\graphics\BasicShaderProgram.cpp" />
+    <ClCompile Include="src\graphics\Camera.cpp" />
     <ClCompile Include="src\graphics\QuadBatch.cpp" />
     <ClCompile Include="src\sampling\debugclient\ComCallStack.cpp" />
     <ClCompile Include="src\sampling\debugclient\ComSampler.cpp" />

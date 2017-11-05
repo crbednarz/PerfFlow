@@ -3,6 +3,7 @@
 
 namespace PerfFlow
 {
+class Camera;
 class ProcessSample;
 
 
@@ -18,7 +19,7 @@ public:
 	IVisualizer& operator=(IVisualizer&& other) = default;
 
 	virtual void onSampleReceived(const ProcessSample&) = 0;
-	virtual void render() = 0;
+	virtual void render(const Camera& camera) = 0;
 
 };
 

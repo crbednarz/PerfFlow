@@ -50,7 +50,7 @@ void PerfFlow::TestVisualizer::onSampleReceived(const ProcessSample& sample)
 }
 
 
-void PerfFlow::TestVisualizer::render()
+void PerfFlow::TestVisualizer::render(const Camera& camera)
 {
 	using namespace oglplus;
 	ensureInitialized();

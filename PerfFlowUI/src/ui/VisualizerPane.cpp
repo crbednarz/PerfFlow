@@ -8,6 +8,7 @@ wxBEGIN_EVENT_TABLE(PerfFlow::VisualizerPane, wxGLCanvas)
 	EVT_PAINT(PerfFlow::VisualizerPane::onPaint)
 	EVT_SIZE(PerfFlow::VisualizerPane::onSize)
 	EVT_IDLE(PerfFlow::VisualizerPane::onIdle)
+	EVT_MOUSE_EVENTS(PerfFlow::VisualizerPane::onMouseEvent)
 wxEND_EVENT_TABLE()
 
 
@@ -49,6 +50,8 @@ void PerfFlow::VisualizerPane::onSize(wxSizeEvent& sizeEvent)
 {
 	using namespace oglplus;
 	Context::Viewport(sizeEvent.GetSize().GetWidth(), sizeEvent.GetSize().GetHeight());
+
+	_cameraController.processResize(sizeEvent);
 }
 
 
@@ -57,6 +60,13 @@ void PerfFlow::VisualizerPane::onIdle(wxIdleEvent& idleEvent)
 	wxClientDC dc(this);
 	render();
 	idleEvent.RequestMore(); // render continuously, not only once on idle
+}
+
+
+void PerfFlow::VisualizerPane::onMouseEvent(wxMouseEvent& mouseEvent)
+{
+	mouseEvent.Skip();
+	_cameraController.processInput(mouseEvent);
 }
 
 
@@ -81,7 +91,7 @@ void PerfFlow::VisualizerPane::render()
 			_samplerOutput->pop();
 		}
 
-		_visualizer->render();
+		_visualizer->render(_cameraController.camera());
 	}
 
 	SwapBuffers();

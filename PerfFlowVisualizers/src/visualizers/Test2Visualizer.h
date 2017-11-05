@@ -20,7 +20,7 @@ public:
 
 	void onSampleReceived(const ProcessSample& sample) override;
 
-	void render() override;
+	void render(const Camera& camera) override;
 
 
 private:

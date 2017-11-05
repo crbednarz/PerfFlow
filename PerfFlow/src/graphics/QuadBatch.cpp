@@ -34,6 +34,19 @@ void PerfFlow::QuadBatch::clear()
 }
 
 
+void PerfFlow::QuadBatch::setViewMatrix(const glm::mat4& viewMatrix)
+{
+	_shader.use();
+	const oglplus::Mat4f oglViewMatrix(
+		viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0], viewMatrix[3][0], 
+		viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1], viewMatrix[3][1], 
+		viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2], viewMatrix[3][2], 
+		viewMatrix[0][3], viewMatrix[1][3], viewMatrix[2][3], viewMatrix[3][3]);
+	
+	(_shader.get() / "uViewMatrix").SetValue(oglViewMatrix);
+}
+
+
 void PerfFlow::QuadBatch::draw() const
 {
 	using namespace oglplus;
@@ -47,6 +60,8 @@ void PerfFlow::QuadBatch::draw() const
 
 	_colorBuffer.Bind(Buffer::Target::Array);
 	Buffer::Data(Buffer::Target::Array, _count * 4, _colorData.data());
+
+	_shader.use();
 
 	Context gl;
 	gl.DrawElements(
@@ -67,11 +82,12 @@ void PerfFlow::QuadBatch::setup()
 		attribute vec2 aTextureCoord; \
 		varying vec4 vColor; \
 		varying vec2 vTextureCoord; \
+		uniform mat4 uViewMatrix; \
 		void main(void) \
 		{ \
 			vColor = aColor; \
 			vTextureCoord = aTextureCoord; \
-			gl_Position = vec4(aPosition, 0.0, 1.0); \
+			gl_Position = uViewMatrix * vec4(aPosition, 0.0, 1.0); \
 		} \
 		",
 		"\
@@ -80,7 +96,12 @@ void PerfFlow::QuadBatch::setup()
 		varying vec2 vTextureCoord; \
 		void main(void) \
 		{ \
-			gl_FragColor = vColor; \
+			float distance = length(vTextureCoord - 0.5); \
+			if (distance < 0.49) { \
+				gl_FragColor = vColor; \
+			} else { \
+				gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0); \
+			} \
 		} \
 		");
 

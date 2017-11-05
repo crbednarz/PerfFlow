@@ -4,6 +4,7 @@
 #include "sampling/SamplingContext.h"
 #include "utilities/GLIncludes.h"
 #include "graphics/QuadBatch.h"
+#include "graphics/Camera.h"
 
 
 PerfFlow::Test2Visualizer::Test2Visualizer(std::shared_ptr<SamplingContext> context) :
@@ -64,11 +65,11 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 }
 
 
-void PerfFlow::Test2Visualizer::render()
+void PerfFlow::Test2Visualizer::render(const Camera& camera)
 {
 	using namespace oglplus;
 	ensureInitialized();
-
+	_batcher->setViewMatrix(camera.createViewMatrix());
 	_batcher->clear();
 	
 	int i = 0;
@@ -144,7 +145,8 @@ void PerfFlow::Test2Visualizer::ensureInitialized()
 	_batcher = std::make_unique<QuadBatch>(2000);
 	Context::Disable(Capability::DepthTest);
 	Context::Disable(Capability::CullFace);
-	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	Context::Enable(Capability::Blend);
+	Context::BlendFunc(BlendFn::SrcAlpha, BlendFn::OneMinusSrcAlpha);
 
 	_isInitialized = true;
 

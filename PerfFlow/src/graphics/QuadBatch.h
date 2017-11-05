@@ -5,7 +5,7 @@
 
 namespace PerfFlow
 {
-	
+
 
 class QuadBatch
 {
@@ -14,6 +14,8 @@ public:
 
 	void add(glm::vec2 position, glm::vec2 size);
 	void clear();
+
+	void setViewMatrix(const glm::mat4& viewMatrix);
 
 	void draw() const;
 
