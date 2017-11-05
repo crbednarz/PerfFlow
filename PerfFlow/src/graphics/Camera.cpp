@@ -17,5 +17,5 @@ void PerfFlow::Camera::moveBy(const glm::vec2 offset)
 
 glm::mat4 PerfFlow::Camera::createViewMatrix() const
 {
-	return glm::ortho(_center.x - _size.x * 0.5f, _center.x + _size.x * 0.5f, _center.y + _size.y * 0.5f, _center.y - _size.y * 0.5f);
+	return glm::ortho(left(), right(), bottom(), top());
 }

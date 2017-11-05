@@ -22,6 +22,7 @@ public:
 
 private:
 	Camera _camera;
+	glm::vec2 _resolution;
 	glm::vec2 _lastMousePosition;
 	float _zoom;
 };

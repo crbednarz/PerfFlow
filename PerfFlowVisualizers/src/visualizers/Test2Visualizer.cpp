@@ -48,7 +48,7 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 				Ball newBall;
 
 				newBall._position = glm::vec2(glm::cos(angle) * distance, glm::sin(angle) * distance);
-				newBall._velocity = glm::vec2(0.0f, glm::cos(angle) * 0.01f);
+				newBall._velocity = glm::vec2(0.0f, glm::cos(angle) * 4.0f);
 				newBall._radius = 0.0f;
 				_balls.insert(std::make_pair(symbolId, newBall));
 				it = _balls.find(symbolId);
@@ -57,7 +57,7 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 
 			auto& ball = it->second;
 
-			ball._radius = std::min(ball._radius + 0.01f, 0.3f);
+			ball._radius = std::min(ball._radius + 4.0f, 12.0f);
 			ball._attractedTo = lastBall;
 			lastBall = &ball;
 		}
@@ -80,14 +80,13 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 
 		if (ball._attractedTo != nullptr)
 			diff -= ball._attractedTo->_position;
-		diff *= 5.0f;
 		float dist = glm::length(diff);
 		auto normalizedDiff = diff / dist;
 
-		ball._velocity -= normalizedDiff * std::min(0.01f, 0.01f / (dist * dist));
+		ball._velocity -= normalizedDiff * std::min(4.0f, 4.0f / (dist * dist));
 
 		ball._radius *= 0.95f;
-		ball._radius = std::max(ball._radius, 0.02f);
+		ball._radius = std::max(ball._radius, 1.0f);
 		ball._velocity *= 0.999f;
 		ball._position += ball._velocity * 0.05f;
 	}
@@ -114,9 +113,9 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 				otherBall._velocity = glm::reflect(otherBall._velocity, normal) * 0.9f;
 
 				if (otherBall._radius < ball._radius)
-					otherBall._position = ball._position + normal * (ball._radius + otherBall._radius + 0.0001f);
+					otherBall._position = ball._position + normal * (ball._radius + otherBall._radius + 0.001f);
 				else
-					ball._position = otherBall._position - normal * (otherBall._radius + ball._radius + 0.0001f);
+					ball._position = otherBall._position - normal * (otherBall._radius + ball._radius + 0.001f);
 
 			}
 		}
