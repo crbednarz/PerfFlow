@@ -59,7 +59,17 @@ namespace PerfFlowTests
 			repo.setupUserData<int>();
 
 			Assert::AreEqual(static_cast<int*>(nullptr), repo.userData<int>(entity));
-			
+		}
+
+		TEST_METHOD(userDataCanBeAccessedByKey)
+		{
+			MockRepository repo;
+			repo.setupUserData<int>();
+			repo.add(5, "entity");
+			int userData = 5;
+			repo.userData<int>(5) = &userData;
+
+			Assert::AreEqual(&userData, repo.userData<int>(5));
 		}
 
 	};

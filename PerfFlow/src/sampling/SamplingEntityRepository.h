@@ -87,7 +87,7 @@ template <typename TKey, typename TEntity>
 template <typename TUserData>
 TUserData*& PerfFlow::SamplingEntityRepository<TKey, TEntity>::userData(TKey key)
 {
-	return userData(tryGet(key));
+	return userData<TUserData>(tryGet(key));
 }
 
 
