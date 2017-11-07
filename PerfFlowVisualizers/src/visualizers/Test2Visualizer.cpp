@@ -11,6 +11,7 @@ PerfFlow::Test2Visualizer::Test2Visualizer(const std::shared_ptr<SamplingContext
 	_context(context),
 	_isInitialized(false)
 {
+	_context->symbols().setupUserData<Ball>();
 }
 
 
@@ -38,22 +39,23 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 			auto relativeAddress = (address - minAddress) / static_cast<float>(maxAddress - minAddress);
 
 			float angle = relativeAddress * 3.141592f * 2.0f;
-			float distance = (frameIndex + 1) / (float)thread.frameCount();
+			float distance = (frameIndex + 1) / static_cast<float>(thread.frameCount());
 
-			auto it = _balls.find(symbol->address());
-			if (it == _balls.end())
+			auto& userData = _context->symbols().userData<Ball>(symbol);
+
+			if (userData == nullptr)
 			{
 				Ball newBall;
 
 				newBall._position = glm::vec2(glm::cos(angle) * distance, glm::sin(angle) * distance);
 				newBall._velocity = glm::vec2(0.0f, glm::cos(angle) * 4.0f);
 				newBall._radius = 0.0f;
-				_balls.insert(std::make_pair(symbol->address(), newBall));
-				it = _balls.find(symbol->address());
-				
+				_balls.push_back(newBall);
+
+				userData = &_balls[_balls.size() - 1];
 			}
 
-			auto& ball = it->second;
+			auto& ball = *userData;
 
 			ball._radius = std::min(ball._radius + 4.0f, 12.0f);
 			ball._attractedTo = lastBall;
@@ -71,9 +73,8 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 	_batcher->clear();
 	
 	int i = 0;
-	for (auto& pair : _balls)
+	for (auto& ball : _balls)
 	{
-		auto& ball = pair.second;
 		auto diff = ball._position;
 
 		if (ball._attractedTo != nullptr)
@@ -88,15 +89,11 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 		ball._velocity *= 0.999f;
 		ball._position += ball._velocity * 0.05f;
 	}
-	for (auto& pair : _balls)
+	for (auto& ball : _balls)
 	{
 
-		auto& ball = pair.second;
-
-		for (auto& collisionPair : _balls)
+		for (auto& otherBall : _balls)
 		{
-			auto& otherBall = collisionPair.second;
-
 			if (&otherBall == &ball)
 				continue;
 
@@ -118,10 +115,8 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 			}
 		}
 	}
-	for (auto& pair : _balls)
+	for (auto& ball : _balls)
 	{
-
-		auto& ball = pair.second;
 		_batcher->add(ball._position - ball._radius, glm::vec2(ball._radius * 2.0f));
 		i++;
 		if (i == _batcher->capacity())

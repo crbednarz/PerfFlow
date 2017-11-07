@@ -2,9 +2,10 @@
 
 #include "visualization/IVisualizer.h"
 #include <memory>
-#include <unordered_map>
+#include <vector>
 #include "symbols/SymbolId.h"
 #include "glm.hpp"
+#include <deque>
 
 
 namespace PerfFlow
@@ -35,7 +36,7 @@ private:
 	std::shared_ptr<SamplingContext> _context;
 	std::unique_ptr<QuadBatch> _batcher;
 
-	std::unordered_map<size_t, Ball> _balls;
+	std::deque<Ball> _balls;
 	bool _isInitialized;
 
 	void ensureInitialized();
