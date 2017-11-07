@@ -7,7 +7,7 @@
 #include "graphics/Camera.h"
 
 
-PerfFlow::Test2Visualizer::Test2Visualizer(std::shared_ptr<SamplingContext> context) :
+PerfFlow::Test2Visualizer::Test2Visualizer(const std::shared_ptr<SamplingContext> context) :
 	_context(context),
 	_isInitialized(false)
 {
@@ -26,9 +26,7 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 		for (size_t frameIndex = 0; frameIndex < thread.frameCount(); frameIndex++)
 		{
 			auto frame = thread.getFrame(frameIndex);
-
-			auto symbolId = frame.getSymbolId();
-			auto symbol = _context->symbols().tryGet(symbolId);
+			auto symbol = frame.symbol();
 
 			if (symbol == nullptr)
 				continue;
@@ -42,7 +40,7 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 			float angle = relativeAddress * 3.141592f * 2.0f;
 			float distance = (frameIndex + 1) / (float)thread.frameCount();
 
-			auto it = _balls.find(symbolId);
+			auto it = _balls.find(symbol->address());
 			if (it == _balls.end())
 			{
 				Ball newBall;
@@ -50,8 +48,8 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 				newBall._position = glm::vec2(glm::cos(angle) * distance, glm::sin(angle) * distance);
 				newBall._velocity = glm::vec2(0.0f, glm::cos(angle) * 4.0f);
 				newBall._radius = 0.0f;
-				_balls.insert(std::make_pair(symbolId, newBall));
-				it = _balls.find(symbolId);
+				_balls.insert(std::make_pair(symbol->address(), newBall));
+				it = _balls.find(symbol->address());
 				
 			}
 

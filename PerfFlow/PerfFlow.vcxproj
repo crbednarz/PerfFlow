@@ -134,7 +134,6 @@
     <ClCompile Include="src\symbols\ProcessModule.cpp" />
     <ClCompile Include="src\symbols\Symbol.cpp" />
     <ClCompile Include="src\symbols\SymbolId.cpp" />
-    <ClCompile Include="src\symbols\SymbolRepository.cpp" />
     <ClCompile Include="src\system\Process.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

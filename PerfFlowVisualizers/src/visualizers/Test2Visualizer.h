@@ -35,7 +35,7 @@ private:
 	std::shared_ptr<SamplingContext> _context;
 	std::unique_ptr<QuadBatch> _batcher;
 
-	std::unordered_map<SymbolId, Ball> _balls;
+	std::unordered_map<size_t, Ball> _balls;
 	bool _isInitialized;
 
 	void ensureInitialized();

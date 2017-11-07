@@ -9,17 +9,25 @@ class ProcessModule;
 class Symbol
 {
 public:
-	explicit Symbol(const std::string& name, const ProcessModule* processModule);
+	explicit Symbol(size_t address, const std::string& name, const ProcessModule* processModule);
 
+	size_t address() const;
 	const std::string& name() const;
 	const ProcessModule& processModule() const;
 
 private:
+	size_t _address;
 	std::string _name;
 	const ProcessModule* _processModule;
 };
 
 
+}
+
+
+inline size_t PerfFlow::Symbol::address() const
+{
+	return _address;
 }
 
 

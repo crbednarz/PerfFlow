@@ -1,5 +1,5 @@
 #pragma once
-#include "symbols/SymbolId.h"
+#include "symbols/Symbol.h"
 
 
 namespace PerfFlow
@@ -10,16 +10,14 @@ class StackFrame
 {
 public:
 	StackFrame();
-	explicit StackFrame(size_t instructionPointer);
-	StackFrame(size_t instructionPointer, SymbolId symbolId);
+	explicit StackFrame(size_t instructionPointer, const Symbol* symbol = nullptr);
 
 	size_t instructionPointer() const;
-	SymbolId getSymbolId() const;
-	void setSymbolId(const SymbolId& symbol);
+	const Symbol* symbol() const;
 
 private:
 	size_t _instructionPointer;
-	SymbolId _symbolId;
+	const Symbol* _symbol;
 };
 
 
@@ -32,13 +30,7 @@ inline size_t PerfFlow::StackFrame::instructionPointer() const
 }
 
 
-inline PerfFlow::SymbolId PerfFlow::StackFrame::getSymbolId() const
+inline const PerfFlow::Symbol* PerfFlow::StackFrame::symbol() const
 {
-	return _symbolId;
-}
-
-
-inline void PerfFlow::StackFrame::setSymbolId(const SymbolId& symbol)
-{
-	_symbolId = symbol;
+	return _symbol;
 }

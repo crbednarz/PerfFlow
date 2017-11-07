@@ -4,21 +4,14 @@
 
 PerfFlow::StackFrame::StackFrame() :
 	_instructionPointer(NULL),
-	_symbolId(SymbolId::None)
+	_symbol(nullptr)
 {
 }
 
 
-PerfFlow::StackFrame::StackFrame(size_t instructionPointer) :
+PerfFlow::StackFrame::StackFrame(const size_t instructionPointer, const Symbol* symbol) :
 	_instructionPointer(instructionPointer),
-	_symbolId(SymbolId::None)
+	_symbol(symbol)
 {
 }
 
-
-PerfFlow::StackFrame::StackFrame(size_t instructionPointer, SymbolId symbolId) :
-	_instructionPointer(instructionPointer),
-	_symbolId(symbolId)
-{
-
-}

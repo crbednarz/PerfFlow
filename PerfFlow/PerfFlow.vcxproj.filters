@@ -143,9 +143,6 @@
     <ClCompile Include="src\sampling\SamplerOutputQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\symbols\SymbolRepository.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\symbols\Symbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

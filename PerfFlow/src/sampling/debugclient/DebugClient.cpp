@@ -77,9 +77,9 @@ void PerfFlow::DebugClient::exportSample(const ComThreadSample& rawSample, Threa
 	{
 		const auto& rawFrame = rawCallStack.getFrame(frameIndex);
 		auto instructionPointer = rawFrame.InstructionOffset;
-		auto symbolId = createInstructionSymbols(instructionPointer, context);
+		auto symbol = createInstructionSymbols(instructionPointer, context);
 
-		outputSample.push(StackFrame(instructionPointer, symbolId));
+		outputSample.push(StackFrame(instructionPointer, symbol));
 	}
 
 }
@@ -96,7 +96,7 @@ bool PerfFlow::DebugClient::waitForClientToAttach(const ComPtr<IDebugControl>& d
 }
 
 
-PerfFlow::SymbolId PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instructionPointer, SamplingContext& context) const
+const PerfFlow::Symbol* PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instructionPointer, SamplingContext& context) const
 {
 	const ULONG NAME_BUFFER_SIZE = 128;
 	char nameBuffer[NAME_BUFFER_SIZE];
@@ -108,13 +108,15 @@ PerfFlow::SymbolId PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instr
 		NAME_BUFFER_SIZE,
 		&nameSize,
 		&displacement)))
-		return SymbolId::None;
+		return nullptr;
 
 	SymbolId symbolId(instructionPointer - displacement);
 	auto& symbols = context.symbols();
 	auto& modules = context.modules();
 
-	if (!symbols.has(symbolId))
+	auto outputSymbol = symbols.tryGet(symbolId);
+
+	if (outputSymbol == nullptr)
 	{
 		ULONG moduleIndex;
 		ULONG64 moduleBase;
@@ -122,22 +124,21 @@ PerfFlow::SymbolId PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instr
 			0,
 			&moduleIndex,
 			&moduleBase)))
-			return SymbolId::None;
+			return nullptr;
 
 		auto processModule = modules.tryGet(moduleBase);
 		if (processModule == nullptr)
 		{
 			processModule = tryAddModuleWithIndex(moduleIndex, modules);
 			if (processModule == nullptr)
-				return SymbolId::None;
+				return nullptr;
 		}
 
-		symbols.add(symbolId, std::string(nameBuffer, nameSize), processModule);
+		Symbol symbol(instructionPointer - displacement, std::string(nameBuffer, nameSize), processModule);
+		outputSymbol = symbols.add(symbolId, symbol);
 	}
 
-
-
-	return symbolId;
+	return outputSymbol;
 }
 
 
