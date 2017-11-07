@@ -1,46 +1,47 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "symbols/SymbolRepository.h"
+#include "sampling\SamplingEntityRepository.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace PerfFlow;
 
 namespace PerfFlowTests
 {
+	using MockRepository = SamplingEntityRepository<size_t, std::string>;
 
-
-	TEST_CLASS(ThreadSampleTests)
+	TEST_CLASS(SamplingEntityRepositoryTests)
 	{
 
 		TEST_METHOD(emptyOnConstruction)
 		{
-			SymbolRepository repo;
+			MockRepository repo;
 
 			Assert::AreEqual(size_t(0), repo.count());
 		}
 
 		TEST_METHOD(canAddSymbols)
 		{
-			SymbolRepository repo;
+			MockRepository repo;
 
 			for (size_t i = 0; i < 10; i++)
 			{
-				repo.add(SymbolId(i), std::to_string(i), 0);
+				const auto result = repo.add(i, std::to_string(i));
 
 				Assert::AreEqual(i + 1, repo.count());
+				Assert::AreEqual(std::to_string(i), *result);
 			}
 		}
 
 		TEST_METHOD(canRetrieveSymbol)
 		{
-			SymbolRepository repo;
+			MockRepository repo;
 
 			for (size_t i = 0; i < 10; i++)
-				repo.add(SymbolId(i), std::to_string(i), 0);
+				repo.add(i, std::to_string(i));
 
 			for (size_t i = 0; i < 10; i++)
 			{
-				auto symbol = repo.tryGet(SymbolId(i));
+				auto symbol = repo.tryGet(i);
 				Assert::IsNotNull(symbol);
 			}
 		}

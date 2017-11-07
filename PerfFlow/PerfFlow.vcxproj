@@ -96,6 +96,7 @@
     <ClInclude Include="src\sampling\ProcessSample.h" />
     <ClInclude Include="src\sampling\SamplerOutputQueue.h" />
     <ClInclude Include="src\sampling\SamplingContext.h" />
+    <ClInclude Include="src\sampling\SamplingEntityRepository.h" />
     <ClInclude Include="src\sampling\SamplingTask.h" />
     <ClInclude Include="src\sampling\StackFrame.h" />
     <ClInclude Include="src\sampling\ThreadSample.h" />
