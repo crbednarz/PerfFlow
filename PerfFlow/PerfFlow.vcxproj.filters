@@ -161,9 +161,6 @@
     <ClCompile Include="src\symbols\ProcessModule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\symbols\ModuleRepository.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\BasicShaderProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

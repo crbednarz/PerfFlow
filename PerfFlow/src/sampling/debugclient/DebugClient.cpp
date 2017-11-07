@@ -124,13 +124,12 @@ PerfFlow::SymbolId PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instr
 			&moduleBase)))
 			return SymbolId::None;
 
-		auto processModule = modules.tryGetAtAddress(moduleBase);
+		auto processModule = modules.tryGet(moduleBase);
 		if (processModule == nullptr)
 		{
-			if (!tryAddModuleWithIndex(moduleIndex, modules))
+			processModule = tryAddModuleWithIndex(moduleIndex, modules);
+			if (processModule == nullptr)
 				return SymbolId::None;
-
-			processModule = modules.tryGetAtAddress(moduleBase);
 		}
 
 		symbols.add(symbolId, std::string(nameBuffer, nameSize), processModule);
@@ -142,7 +141,7 @@ PerfFlow::SymbolId PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instr
 }
 
 
-bool PerfFlow::DebugClient::tryAddModuleWithIndex(ULONG moduleIndex, ModuleRepository& modules) const
+const PerfFlow::ProcessModule*  PerfFlow::DebugClient::tryAddModuleWithIndex(ULONG moduleIndex, ModuleRepository& modules) const
 {
 
 	DEBUG_MODULE_PARAMETERS parameters;
@@ -151,7 +150,7 @@ bool PerfFlow::DebugClient::tryAddModuleWithIndex(ULONG moduleIndex, ModuleRepos
 		NULL,
 		moduleIndex,
 		&parameters)))
-		return false;
+		return nullptr;
 
 	std::string name(parameters.ModuleNameSize, ' ');
 	
@@ -160,9 +159,7 @@ bool PerfFlow::DebugClient::tryAddModuleWithIndex(ULONG moduleIndex, ModuleRepos
 		NULL, 0, NULL, // Image Name 
 		&name[0], static_cast<ULONG>(name.size()), NULL, // Module Name,
 		NULL, 0, NULL))) // Loaded Image Name
-		return false;
+		return nullptr;
 
-	modules.add(name, parameters.Base, parameters.Size, moduleIndex);
-
-	return true;
+	return modules.add(parameters.Base, ProcessModule(name, parameters.Base, parameters.Size, moduleIndex));
 }

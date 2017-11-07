@@ -23,6 +23,7 @@ public:
 private:
 	struct EntityWithUserData
 	{
+		EntityWithUserData(const TEntity& entity, void* userData);
 		TEntity _entity;
 		void* _userData;
 	};
@@ -66,6 +67,14 @@ size_t PerfFlow::SamplingEntityRepository<TKey, TEntity>::count()
 
 
 template <typename TKey, typename TEntity>
+PerfFlow::SamplingEntityRepository<TKey, TEntity>::EntityWithUserData::EntityWithUserData(const TEntity& entity, void* userData) :
+	_entity(entity),
+	_userData(userData)
+{
+}
+
+
+template <typename TKey, typename TEntity>
 PerfFlow::SamplingEntityRepository<TKey, TEntity>::SamplingEntityRepository() :
 	_entities(std::make_unique<std::unordered_map<TKey, EntityWithUserData>>())
 {
@@ -78,9 +87,7 @@ const TEntity* PerfFlow::SamplingEntityRepository<TKey, TEntity>::add(const TKey
 {
 	assert(!has(key));
 
-	EntityWithUserData repoItem;
-	repoItem._entity = entity;
-	repoItem._userData = nullptr;
+	EntityWithUserData repoItem(entity, nullptr);
 
 	std::lock_guard<std::mutex> lockGuard(_mutex);
 	const auto it = _entities->insert(std::make_pair(key, repoItem));

@@ -131,7 +131,6 @@
     <ClCompile Include="src\sampling\SamplingTask.cpp" />
     <ClCompile Include="src\sampling\StackFrame.cpp" />
     <ClCompile Include="src\sampling\ThreadSample.cpp" />
-    <ClCompile Include="src\symbols\ModuleRepository.cpp" />
     <ClCompile Include="src\symbols\ProcessModule.cpp" />
     <ClCompile Include="src\symbols\Symbol.cpp" />
     <ClCompile Include="src\symbols\SymbolId.cpp" />
