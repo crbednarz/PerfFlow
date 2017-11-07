@@ -46,6 +46,22 @@ namespace PerfFlowTests
 			}
 		}
 
+		TEST_METHOD(settingUserDataTypeResetsUserData)
+		{
+			MockRepository repo;
+			repo.setupUserData<int>();
+			auto entity = repo.add(1, "entity");
+			int userData = 5;
+			repo.userData<int>(entity) = &userData;
+
+			Assert::AreEqual(&userData, repo.userData<int>(entity));
+
+			repo.setupUserData<int>();
+
+			Assert::AreEqual(static_cast<int*>(nullptr), repo.userData<int>(entity));
+			
+		}
+
 	};
 
 
