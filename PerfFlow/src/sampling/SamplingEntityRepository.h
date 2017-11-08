@@ -10,25 +10,37 @@ namespace PerfFlow
 {
 
 
+/// Simple dictionary used for sampling data such as modules or symbols.
+/// To avoid additional lookups all returned pointers will only be invalidated at the end of its owning repository's life.
+/// Additionally, a single user-data pointer may be stored per entity to help track visualizer information relevant to the entity.
 template <typename TKey, typename TEntity>
 class SamplingEntityRepository
 {
 public:
+	/* In regards to user data, there was a common pattern occuring on the visualizer side where visualizers would need to store their own dictionary 
+	 * of SymbolId -> Symbol. This ended up not being very suitable for the volumes of data that were being processed. To counter this, a single pointer
+	 * may be stored per entity. This can be accessed via the pointer to the entity at almost no cost. This also solved the issue of tracking first-time
+	 * appearances of a particular symbol inside of a visualizer, as user-data defaults to nullptr after setupUserData();
+	 */
+
 	SamplingEntityRepository();
 
 	const TEntity* add(TKey key, const TEntity& entity);
 	const TEntity* tryGet(TKey key);
 	bool has(TKey key);
 
-	/// Sets the type of data to be used for user-data, and clears out any existing user-data.
+	/// Sets the type of data to be used for user-data, and clears out any existing user-data. 
+	/// Only one type of user data may be active at any given time.
 	template <typename TUserData>
 	void setupUserData();
 
 	/// Returns a reference to the user-data pointer for the given entry.
+	/// setupUserData must be called at least once to initialize user data of the specified type.
 	template <typename TUserData>
 	TUserData*& userData(TKey key);
 
 	/// Returns a reference to the user-data pointer for the given entity.
+	/// setupUserData must be called at least once to initialize user data of the specified type.
 	template <typename TUserData>
 	TUserData*& userData(const TEntity* entity);
 
