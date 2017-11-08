@@ -12,17 +12,18 @@ PerfFlow::QuadBatch::QuadBatch(size_t capacity) :
 }
 
 
-void PerfFlow::QuadBatch::add(glm::vec2 position, glm::vec2 size)
+void PerfFlow::QuadBatch::add(const glm::vec2 position, const glm::vec2 size, const glm::vec4 color)
 {
 	_positionData[_count * 4 + 0] = oglplus::Vec2f(position.x, position.y);
 	_positionData[_count * 4 + 1] = oglplus::Vec2f(position.x + size.x, position.y);
 	_positionData[_count * 4 + 2] = oglplus::Vec2f(position.x, position.y + size.y);
 	_positionData[_count * 4 + 3] = oglplus::Vec2f(position.x + size.x, position.y + size.y);
 
-	_colorData[_count * 4 + 0] = oglplus::Vec4f(1.0f);
-	_colorData[_count * 4 + 1] = oglplus::Vec4f(1.0f);
-	_colorData[_count * 4 + 2] = oglplus::Vec4f(1.0f);
-	_colorData[_count * 4 + 3] = oglplus::Vec4f(1.0f);
+	auto oglColor = oglplus::Vec4f(color.r, color.g, color.b, color.a);
+	_colorData[_count * 4 + 0] = oglColor;
+	_colorData[_count * 4 + 1] = oglColor;
+	_colorData[_count * 4 + 2] = oglColor;
+	_colorData[_count * 4 + 3] = oglColor;
 
 	_count++;
 }

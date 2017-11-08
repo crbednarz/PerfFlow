@@ -33,6 +33,7 @@ private:
 		Ball* _attractedTo;
 	};
 
+	Ball* _selected;
 	std::shared_ptr<SamplingContext> _context;
 	std::unique_ptr<QuadBatch> _batcher;
 

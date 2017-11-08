@@ -9,7 +9,8 @@
 
 PerfFlow::Test2Visualizer::Test2Visualizer(const std::shared_ptr<SamplingContext> context) :
 	_context(context),
-	_isInitialized(false)
+	_isInitialized(false),
+	_selected(nullptr)
 {
 	_context->symbols().setupUserData<Ball>();
 }
@@ -60,6 +61,9 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 			ball._radius = std::min(ball._radius + 4.0f, 12.0f);
 			ball._attractedTo = lastBall;
 			lastBall = &ball;
+
+			if (_selected == nullptr)
+				_selected = &ball;
 		}
 	}
 }
@@ -117,7 +121,11 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 	}
 	for (auto& ball : _balls)
 	{
-		_batcher->add(ball._position - ball._radius, glm::vec2(ball._radius * 2.0f));
+		glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
+		if (&ball == _selected)
+			color = glm::vec4(0.5f, 0.7f, 1.0f, 1.0f);
+
+		_batcher->add(ball._position - ball._radius, glm::vec2(ball._radius * 2.0f), color);
 		i++;
 		if (i == _batcher->capacity())
 			break;

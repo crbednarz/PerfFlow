@@ -12,7 +12,7 @@ class QuadBatch
 public:
 	explicit QuadBatch(size_t capacity);
 
-	void add(glm::vec2 position, glm::vec2 size);
+	void add(glm::vec2 position, glm::vec2 size, glm::vec4 color);
 	void clear();
 
 	void setViewMatrix(const glm::mat4& viewMatrix);
