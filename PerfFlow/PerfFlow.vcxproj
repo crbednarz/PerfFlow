@@ -112,6 +112,7 @@
     <ClInclude Include="src\utilities\ComIncludes.h" />
     <ClInclude Include="src\utilities\UniqueHandle.h" />
     <ClInclude Include="src\utilities\WindowsIncludes.h" />
+    <ClInclude Include="src\visualization\IUISymbolList.h" />
     <ClInclude Include="src\visualization\IVisualizer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

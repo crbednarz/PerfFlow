@@ -2,8 +2,6 @@
 
 #include "visualization/IVisualizer.h"
 #include <memory>
-#include <vector>
-#include "symbols/SymbolId.h"
 #include "glm.hpp"
 #include <deque>
 
@@ -12,12 +10,14 @@ namespace PerfFlow
 {
 class SamplingContext;
 class QuadBatch;
+class IUISymbolList;
+class Symbol;
 
 
 class Test2Visualizer : public IVisualizer
 {
 public:
-	explicit Test2Visualizer(std::shared_ptr<SamplingContext> symbolRepository);
+	explicit Test2Visualizer(std::shared_ptr<SamplingContext> context, IUISymbolList* uiList);
 
 	void onSampleReceived(const ProcessSample& sample) override;
 
@@ -31,11 +31,12 @@ private:
 		glm::vec2 _velocity;
 		float _radius;
 		Ball* _attractedTo;
+		const Symbol* _symbol;
 	};
 
-	Ball* _selected;
 	std::shared_ptr<SamplingContext> _context;
 	std::unique_ptr<QuadBatch> _batcher;
+	IUISymbolList* _uiList;
 
 	std::deque<Ball> _balls;
 	bool _isInitialized;

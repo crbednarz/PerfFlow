@@ -26,19 +26,34 @@ wxEND_EVENT_TABLE()
 
 PerfFlow::MainWindow::MainWindow(const wxString& title, const wxPoint& position, const wxSize& size) : 
 	wxFrame(nullptr, wxID_ANY, title, position, size),
-	_symbolRepository(std::make_shared<SymbolRepository>()),
 	_samplerOutput(std::make_shared<SamplerOutputQueue>(1000))
 {
 	auto menuFile = new wxMenu;
 	menuFile->Append(MenuIdAttachToProcess, "&Attach To Process...\tCtrl-O");
 	menuFile->AppendSeparator();
 	menuFile->Append(wxID_EXIT);
+
 	auto menuBar = new wxMenuBar;
 	menuBar->Append(menuFile, "&File");
 	SetMenuBar(menuBar);
 
 
 	_visualizerPane = new VisualizerPane(this, _samplerOutput);
+
+	_auiManager.SetManagedWindow(this);
+
+	_symbolListControl = new SymbolListControl(this);
+
+	_auiManager.AddPane(_symbolListControl, wxRIGHT, wxT("Symbols"));
+	_auiManager.AddPane(_visualizerPane, wxCENTER);
+
+	_auiManager.Update();
+}
+
+
+PerfFlow::MainWindow::~MainWindow()
+{
+	_auiManager.UnInit();
 }
 
 
@@ -60,7 +75,7 @@ void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
 	_samplingTask = std::make_unique<SamplingTask>(std::move(sampler), _samplerOutput);
 	_samplingTask->begin();
 
-	_visualizerPane->setVisualizer(std::make_unique<Test2Visualizer>(context));
+	_visualizerPane->setVisualizer(std::make_unique<Test2Visualizer>(context, _symbolListControl));
 }
 
 

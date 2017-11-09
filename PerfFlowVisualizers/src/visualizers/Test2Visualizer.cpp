@@ -5,15 +5,17 @@
 #include "utilities/GLIncludes.h"
 #include "graphics/QuadBatch.h"
 #include "graphics/Camera.h"
+#include "visualization/IUISymbolList.h"
 
 
-PerfFlow::Test2Visualizer::Test2Visualizer(const std::shared_ptr<SamplingContext> context) :
+PerfFlow::Test2Visualizer::Test2Visualizer(const std::shared_ptr<SamplingContext> context, IUISymbolList* listController) :
 	_context(context),
-	_isInitialized(false),
-	_selected(nullptr)
+	_uiList(listController),
+	_isInitialized(false)
 {
 	_context->symbols().setupUserData<Ball>();
 }
+
 
 
 void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
@@ -51,6 +53,10 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 				newBall._position = glm::vec2(glm::cos(angle) * distance, glm::sin(angle) * distance);
 				newBall._velocity = glm::vec2(0.0f, glm::cos(angle) * 4.0f);
 				newBall._radius = 0.0f;
+				newBall._symbol = symbol;
+
+				_uiList->addSymbol(symbol);
+
 				_balls.push_back(newBall);
 
 				userData = &_balls[_balls.size() - 1];
@@ -61,9 +67,6 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 			ball._radius = std::min(ball._radius + 4.0f, 12.0f);
 			ball._attractedTo = lastBall;
 			lastBall = &ball;
-
-			if (_selected == nullptr)
-				_selected = &ball;
 		}
 	}
 }
@@ -122,7 +125,7 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 	for (auto& ball : _balls)
 	{
 		glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
-		if (&ball == _selected)
+		if (ball._symbol == _uiList->getSelected())
 			color = glm::vec4(0.5f, 0.7f, 1.0f, 1.0f);
 
 		_batcher->add(ball._position - ball._radius, glm::vec2(ball._radius * 2.0f), color);
