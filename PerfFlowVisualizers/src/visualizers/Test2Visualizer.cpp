@@ -90,6 +90,7 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 		if (ball._attractedTo != nullptr)
 			diff -= ball._attractedTo->_position;
 		float dist = glm::length(diff);
+		dist = std::max(1.0f, dist);
 		auto normalizedDiff = diff / dist;
 
 		ball._velocity -= normalizedDiff * std::min(4.0f, 4.0f / (dist * dist));
