@@ -38,9 +38,7 @@ PerfFlow::SymbolId PerfFlow::SymbolListControl::getSelected() const
 	if (_model->isModule(selectedItem))
 		return SymbolId::None;
 
-	auto selectedItemId = selectedItem.GetID();
-	
-	return SymbolId(reinterpret_cast<size_t>(selectedItemId));
+	return _model->asSymbolId(selectedItem);
 }
 
 
