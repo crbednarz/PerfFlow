@@ -120,6 +120,7 @@ PerfFlow::SymbolId PerfFlow::SymbolsListModel::asSymbolId(const wxDataViewItem& 
 	assert(!isModule(item));
 	auto symbolId = static_cast<uint32_t>(reinterpret_cast<size_t>(item.GetID()));
 	symbolId &= ~MODULE_ID_FLAG;
+	symbolId--;
 	return SymbolId(symbolId);
 }
 
@@ -129,6 +130,7 @@ PerfFlow::ModuleId PerfFlow::SymbolsListModel::asModuleId(const wxDataViewItem& 
 	assert(isModule(item));
 	auto moduleId = static_cast<uint32_t>(reinterpret_cast<size_t>(item.GetID()));
 	moduleId &= ~MODULE_ID_FLAG;
+	moduleId--;
 	return ModuleId(moduleId);
 
 }
@@ -144,7 +146,7 @@ wxDataViewItem PerfFlow::SymbolsListModel::createItem(const SymbolId symbolId)
 {
 	assert(symbolId != SymbolId::None);
 
-	const size_t id = symbolId.index();
+	const size_t id = symbolId.index() + 1;
 	return wxDataViewItem(reinterpret_cast<void*>(id));
 }
 
@@ -153,7 +155,7 @@ wxDataViewItem PerfFlow::SymbolsListModel::createItem(const ModuleId moduleId)
 {
 	assert(moduleId != ModuleId::None);
 
-	size_t id = moduleId.index();
+	size_t id = moduleId.index() + 1;
 	id |= MODULE_ID_FLAG;
 	return wxDataViewItem(reinterpret_cast<void*>(id));
 }
