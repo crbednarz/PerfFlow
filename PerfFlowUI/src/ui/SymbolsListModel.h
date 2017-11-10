@@ -3,18 +3,20 @@
 #include "wx/dataview.h"
 #include "visualization/IUISymbolList.h"
 #include <unordered_map>
+#include "symbols/ModuleRepository.h"
 
 
 namespace PerfFlow
 {
 class Symbol;
 class ProcessModule;
+class SamplingContext;
 
 
 class SymbolsListModel : public wxDataViewModel
 {
 public:
-	SymbolsListModel();
+	SymbolsListModel() = default;
 
 	unsigned GetColumnCount() const override;
 	wxString GetColumnType(unsigned col) const override;
@@ -25,14 +27,23 @@ public:
 	unsigned GetChildren(const wxDataViewItem& item, wxDataViewItemArray& children) const override;
 
 
-	void addSymbol(const Symbol* symbol);
-	void removeSymbol(const Symbol* symbol);
-	const Symbol* getSelected() const;
-	void select(const Symbol* symbol);
-	bool isModule(const wxDataViewItem& item);
+	void addSymbol(SymbolId symbolId);
+	void removeSymbol(SymbolId symbolId);
+
+	static bool isModule(const wxDataViewItem& item);
+	static SymbolId asSymbolId(const wxDataViewItem& item);
+	static ModuleId asModuleId(const wxDataViewItem& item);
+
+	void setContext(std::shared_ptr<SamplingContext> context);
 
 private:
-	std::unordered_map<const ProcessModule*, std::vector<const Symbol*>> _symbolByModule;
+	static constexpr size_t MODULE_ID_FLAG = 0x70000000UL;
+
+	std::unordered_map<ModuleId, std::vector<SymbolId>> _symbolByModule;
+	std::shared_ptr<SamplingContext> _context;
+
+	static wxDataViewItem createItem(SymbolId symbolId);
+	static wxDataViewItem createItem(ModuleId moduleId);
 };
 
 

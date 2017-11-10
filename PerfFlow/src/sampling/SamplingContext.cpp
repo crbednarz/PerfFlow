@@ -2,7 +2,7 @@
 #include "SamplingContext.h"
 
 
-PerfFlow::SamplingContext::SamplingContext(Process process) :
+PerfFlow::SamplingContext::SamplingContext(const Process process) :
 	_process(process)
 {
 

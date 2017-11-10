@@ -30,21 +30,24 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 		for (size_t frameIndex = 0; frameIndex < thread.frameCount(); frameIndex++)
 		{
 			auto frame = thread.getFrame(frameIndex);
-			auto symbol = frame.symbol();
+			auto symbolId = frame.symbolId();
 
-			if (symbol == nullptr)
+			if (symbolId == SymbolId::None)
 				continue;
 
+			const auto& symbol = _context->symbols().get(symbolId);
+			const auto& processModule = _context->modules().get(symbol.moduleId());
+
 			size_t address = frame.instructionPointer();
-			size_t minAddress = symbol->processModule().address();
-			size_t maxAddress = symbol->processModule().size() + minAddress;
+			size_t minAddress = processModule.address();
+			size_t maxAddress = processModule.size() + minAddress;
 
 			auto relativeAddress = (address - minAddress) / static_cast<float>(maxAddress - minAddress);
 
 			float angle = relativeAddress * 3.141592f * 2.0f;
 			float distance = (frameIndex + 1) / static_cast<float>(thread.frameCount());
 
-			auto& userData = _context->symbols().userData<Ball>(symbol);
+			auto& userData = _context->symbols().userData<Ball>(symbolId);
 
 			if (userData == nullptr)
 			{
@@ -53,9 +56,9 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 				newBall._position = glm::vec2(glm::cos(angle) * distance, glm::sin(angle) * distance);
 				newBall._velocity = glm::vec2(0.0f, glm::cos(angle) * 4.0f);
 				newBall._radius = 0.0f;
-				newBall._symbol = symbol;
+				newBall._symbol = symbolId;
 
-				_uiList->addSymbol(symbol);
+				_uiList->addSymbol(symbolId);
 
 				_balls.push_back(newBall);
 

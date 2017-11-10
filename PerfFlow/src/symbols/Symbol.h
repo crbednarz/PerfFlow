@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include "ModuleRepository.h"
+
 
 namespace PerfFlow
 {
@@ -9,16 +11,16 @@ class ProcessModule;
 class Symbol
 {
 public:
-	explicit Symbol(size_t address, const std::string& name, const ProcessModule* processModule);
+	explicit Symbol(size_t address, const std::string& name, ModuleId moduleId);
 
 	size_t address() const;
 	const std::string& name() const;
-	const ProcessModule& processModule() const;
+	ModuleId moduleId() const;
 
 private:
 	size_t _address;
 	std::string _name;
-	const ProcessModule* _processModule;
+	ModuleId _moduleId;
 };
 
 
@@ -37,7 +39,7 @@ inline const std::string& PerfFlow::Symbol::name() const
 }
 
 
-inline const PerfFlow::ProcessModule& PerfFlow::Symbol::processModule() const
+inline PerfFlow::ModuleId PerfFlow::Symbol::moduleId() const
 {
-	return *_processModule;
+	return _moduleId;
 }

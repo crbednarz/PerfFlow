@@ -70,6 +70,7 @@ void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
 	}
 
 	auto context = std::make_shared<SamplingContext>(process);
+	_symbolListControl->setContext(context);
 
 	auto sampler = std::make_unique<ComSampler>(context);
 	_samplingTask = std::make_unique<SamplingTask>(std::move(sampler), _samplerOutput);

@@ -1,6 +1,5 @@
 #pragma once
 #include "Symbol.h"
-#include "SymbolId.h"
 #include "sampling/SamplingEntityRepository.h"
 
 
@@ -8,7 +7,7 @@ namespace PerfFlow
 {
 
 
-using SymbolRepository = SamplingEntityRepository<SymbolId, Symbol>;
-
+using SymbolRepository = SamplingEntityRepository<size_t, Symbol>;
+using SymbolId = SymbolRepository::Id;
 
 }

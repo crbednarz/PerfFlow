@@ -4,6 +4,7 @@
 #include <memory>
 #include "glm.hpp"
 #include <deque>
+#include "symbols/SymbolRepository.h"
 
 
 namespace PerfFlow
@@ -31,7 +32,7 @@ private:
 		glm::vec2 _velocity;
 		float _radius;
 		Ball* _attractedTo;
-		const Symbol* _symbol;
+		SymbolId _symbol;
 	};
 
 	std::shared_ptr<SamplingContext> _context;

@@ -8,6 +8,6 @@ namespace PerfFlow
 	
 
 using ModuleRepository = SamplingEntityRepository<size_t, ProcessModule>;
-
+using ModuleId = ModuleRepository::Id;
 
 }

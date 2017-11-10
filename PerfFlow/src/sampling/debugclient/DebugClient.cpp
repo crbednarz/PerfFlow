@@ -96,7 +96,7 @@ bool PerfFlow::DebugClient::waitForClientToAttach(const ComPtr<IDebugControl>& d
 }
 
 
-const PerfFlow::Symbol* PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instructionPointer, SamplingContext& context) const
+PerfFlow::SymbolId PerfFlow::DebugClient::createInstructionSymbols(ULONG64 instructionPointer, SamplingContext& context) const
 {
 	const ULONG NAME_BUFFER_SIZE = 128;
 	char nameBuffer[NAME_BUFFER_SIZE];
@@ -108,15 +108,15 @@ const PerfFlow::Symbol* PerfFlow::DebugClient::createInstructionSymbols(ULONG64 
 		NAME_BUFFER_SIZE,
 		&nameSize,
 		&displacement)))
-		return nullptr;
+		return SymbolId::None;
 
-	SymbolId symbolId(instructionPointer - displacement);
+	auto symbolAddress = instructionPointer - displacement;
 	auto& symbols = context.symbols();
 	auto& modules = context.modules();
 
-	auto outputSymbol = symbols.tryGet(symbolId);
+	auto symbolId = symbols.getId(symbolAddress);
 
-	if (outputSymbol == nullptr)
+	if (symbolId == SymbolId::None)
 	{
 		ULONG moduleIndex;
 		ULONG64 moduleBase;
@@ -124,25 +124,25 @@ const PerfFlow::Symbol* PerfFlow::DebugClient::createInstructionSymbols(ULONG64 
 			0,
 			&moduleIndex,
 			&moduleBase)))
-			return nullptr;
+			return SymbolId::None;
 
-		auto processModule = modules.tryGet(moduleBase);
-		if (processModule == nullptr)
+		auto processModule = modules.getId(moduleBase);
+		if (processModule == ModuleId::None)
 		{
 			processModule = tryAddModuleWithIndex(moduleIndex, modules);
-			if (processModule == nullptr)
-				return nullptr;
+			if (processModule == ModuleId::None)
+				return SymbolId::None;
 		}
 
 		Symbol symbol(instructionPointer - displacement, std::string(nameBuffer, nameSize), processModule);
-		outputSymbol = symbols.add(symbolId, symbol);
+		symbolId = symbols.add(symbolAddress, symbol);
 	}
 
-	return outputSymbol;
+	return symbolId;
 }
 
 
-const PerfFlow::ProcessModule*  PerfFlow::DebugClient::tryAddModuleWithIndex(ULONG moduleIndex, ModuleRepository& modules) const
+PerfFlow::ModuleId PerfFlow::DebugClient::tryAddModuleWithIndex(ULONG moduleIndex, ModuleRepository& modules) const
 {
 
 	DEBUG_MODULE_PARAMETERS parameters;
@@ -151,7 +151,7 @@ const PerfFlow::ProcessModule*  PerfFlow::DebugClient::tryAddModuleWithIndex(ULO
 		NULL,
 		moduleIndex,
 		&parameters)))
-		return nullptr;
+		return ModuleId::None;
 
 	std::string name(parameters.ModuleNameSize, ' ');
 	
@@ -160,7 +160,7 @@ const PerfFlow::ProcessModule*  PerfFlow::DebugClient::tryAddModuleWithIndex(ULO
 		NULL, 0, NULL, // Image Name 
 		&name[0], static_cast<ULONG>(name.size()), NULL, // Module Name,
 		NULL, 0, NULL))) // Loaded Image Name
-		return nullptr;
+		return ModuleId::None;
 
 	return modules.add(parameters.Base, ProcessModule(name, parameters.Base, parameters.Size, moduleIndex));
 }

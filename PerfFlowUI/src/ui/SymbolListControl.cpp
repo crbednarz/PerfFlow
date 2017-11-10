@@ -16,32 +16,40 @@ PerfFlow::SymbolListControl::SymbolListControl(wxWindow* parent) :
 }
 
 
-void PerfFlow::SymbolListControl::addSymbol(const Symbol* symbol)
+void PerfFlow::SymbolListControl::addSymbol(const SymbolId symbolId)
 {
-	_model->addSymbol(symbol);
+	_model->addSymbol(symbolId);
 }
 
 
-void PerfFlow::SymbolListControl::removeSymbol(const Symbol* symbol)
+void PerfFlow::SymbolListControl::removeSymbol(const SymbolId symbolId)
 {
-	_model->removeSymbol(symbol);
+	_model->removeSymbol(symbolId);
 }
 
 
-const PerfFlow::Symbol* PerfFlow::SymbolListControl::getSelected() const
+PerfFlow::SymbolId PerfFlow::SymbolListControl::getSelected() const
 {
 	auto selectedItem = GetSelection();
 
 	if (selectedItem == nullptr)
-		return nullptr;
+		return SymbolId::None;
 
 	if (_model->isModule(selectedItem))
-		return nullptr;
+		return SymbolId::None;
 
-	return reinterpret_cast<const Symbol*>(selectedItem.GetID());
+	auto selectedItemId = selectedItem.GetID();
+	
+	return SymbolId(reinterpret_cast<size_t>(selectedItemId));
 }
 
 
-void PerfFlow::SymbolListControl::select(const Symbol* symbol)
+void PerfFlow::SymbolListControl::select(const SymbolId symbolId)
 {
+}
+
+
+void PerfFlow::SymbolListControl::setContext(const std::shared_ptr<SamplingContext> context) const
+{
+	_model->setContext(context);
 }

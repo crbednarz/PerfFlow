@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "sampling\SamplingEntityRepository.h"
+#include "sampling/SamplingEntityRepository.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace PerfFlow;
@@ -8,6 +8,7 @@ using namespace PerfFlow;
 namespace PerfFlowTests
 {
 	using MockRepository = SamplingEntityRepository<size_t, std::string>;
+	using MockId = MockRepository::Id;
 
 	TEST_CLASS(SamplingEntityRepositoryTests)
 	{
@@ -28,7 +29,7 @@ namespace PerfFlowTests
 				const auto result = repo.add(i, std::to_string(i));
 
 				Assert::AreEqual(i + 1, repo.count());
-				Assert::AreEqual(std::to_string(i), *result);
+				Assert::AreEqual(std::to_string(i), repo.get(result));
 			}
 		}
 
@@ -41,8 +42,8 @@ namespace PerfFlowTests
 
 			for (size_t i = 0; i < 10; i++)
 			{
-				auto symbol = repo.tryGet(i);
-				Assert::IsNotNull(symbol);
+				auto symbol = repo.getId(i);
+				Assert::IsTrue(MockId::None != symbol);
 			}
 		}
 

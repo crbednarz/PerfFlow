@@ -14,10 +14,12 @@ class SymbolListControl : public wxDataViewCtrl, public IUISymbolList
 public:
 	explicit SymbolListControl(wxWindow* parent);
 
-	void addSymbol(const Symbol* symbol) override;
-	void removeSymbol(const Symbol* symbol) override;
-	const Symbol* getSelected() const override;
-	void select(const Symbol* symbol) override;
+	void addSymbol(SymbolId symbolId) override;
+	void removeSymbol(SymbolId symbolId) override;
+	SymbolId getSelected() const override;
+	void select(SymbolId symbolId) override;
+
+	void setContext(std::shared_ptr<SamplingContext> context) const;
 
 private:
 	wxObjectDataPtr<SymbolsListModel> _model;

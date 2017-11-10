@@ -2,11 +2,8 @@
 #include "SymbolsListModel.h"
 #include "symbols/Symbol.h"
 #include "symbols/ProcessModule.h"
-
-
-PerfFlow::SymbolsListModel::SymbolsListModel() 
-{
-}
+#include "sampling/SamplingContext.h"
+#include <xlocmon>
 
 
 unsigned PerfFlow::SymbolsListModel::GetColumnCount() const
@@ -23,17 +20,10 @@ wxString PerfFlow::SymbolsListModel::GetColumnType(unsigned col) const
 
 void PerfFlow::SymbolsListModel::GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned col) const
 {
-	const auto processModule = reinterpret_cast<const ProcessModule*>(item.GetID());
-
-	const auto it = _symbolByModule.find(processModule);
-
-	if (it != _symbolByModule.end())
-	{
-		variant = it->first->name();
-		return;
-	}
-
-	variant = reinterpret_cast<const Symbol*>(item.GetID())->name();
+	if (isModule(item))
+		variant = _context->modules().get(asModuleId(item)).name();
+	else
+		variant = _context->symbols().get(asSymbolId(item)).name();
 }
 
 
@@ -45,28 +35,16 @@ bool PerfFlow::SymbolsListModel::SetValue(const wxVariant& variant, const wxData
 
 wxDataViewItem PerfFlow::SymbolsListModel::GetParent(const wxDataViewItem& item) const
 {
-	if (item.GetID() == nullptr)
+	if (item.GetID() == nullptr || isModule(item))
 		return wxDataViewItem(nullptr);
 
-	const auto processModule = reinterpret_cast<const ProcessModule*>(item.GetID());
-
-	const auto it = _symbolByModule.find(processModule);
-	
-	if (it != _symbolByModule.end())
-		return wxDataViewItem(nullptr);
-	
-	auto symbol = reinterpret_cast<const Symbol*>(item.GetID());
-	return wxDataViewItem(const_cast<ProcessModule*>(&symbol->processModule()));
+	return createItem(_context->symbols().get(asSymbolId(item)).moduleId());
 }
 
 
 bool PerfFlow::SymbolsListModel::IsContainer(const wxDataViewItem& item) const
 {
-	if (item.GetID() == nullptr)
-		return true;
-
-	const auto processModule = reinterpret_cast<const ProcessModule*>(item.GetID());
-	return _symbolByModule.find(processModule) != _symbolByModule.end();
+	return item.GetID() == nullptr || isModule(item);
 
 }
 
@@ -76,67 +54,106 @@ unsigned PerfFlow::SymbolsListModel::GetChildren(const wxDataViewItem& item, wxD
 	if (item.GetID() == nullptr)
 	{
 		for (const auto& pair : _symbolByModule)
-			children.Add(wxDataViewItem(const_cast<ProcessModule*>(pair.first)));
+			children.Add(createItem(pair.first));
 
 		return _symbolByModule.size();
 	}
 
-	const auto processModule = reinterpret_cast<const ProcessModule*>(item.GetID());
-	const auto it = _symbolByModule.find(processModule);
+	if (!isModule(item))
+		return 0;
+
+
+	const auto it = _symbolByModule.find(asModuleId(item));
 
 	if (it == _symbolByModule.end())
 		return 0;
 
 	const auto& symbolList = it->second;
 
-	for (const auto& symbol : symbolList)
-		children.Add(wxDataViewItem(const_cast<Symbol*>(symbol)));
+	for (const auto& symbolId : symbolList)
+		children.Add(createItem(symbolId));
 
 	return symbolList.size();
 }
 
 
-void PerfFlow::SymbolsListModel::addSymbol(const Symbol* symbol)
+void PerfFlow::SymbolsListModel::addSymbol(const SymbolId symbolId)
 {
-	void* moduleId = const_cast<ProcessModule*>(&symbol->processModule());
-	void* symbolId = const_cast<Symbol*>(symbol);
+	assert(symbolId != SymbolId::None);
 
-	auto it = _symbolByModule.find(&symbol->processModule());
+	const auto& symbol = _context->symbols().get(symbolId);
+
+	auto it = _symbolByModule.find(symbol.moduleId());
 
 	if (it == _symbolByModule.end())
 	{
-		_symbolByModule.insert(std::make_pair(&symbol->processModule(), std::vector<const Symbol*> { symbol }));
+		_symbolByModule.insert(std::make_pair(symbol.moduleId(), std::vector<SymbolId> { symbolId }));
 
-		ItemAdded(wxDataViewItem(nullptr), wxDataViewItem(moduleId));
+		ItemAdded(wxDataViewItem(nullptr), createItem(symbol.moduleId()));
 	}
 	else
 	{
-		it->second.push_back(symbol);
+		it->second.push_back(symbolId);
 	}
 
 
-	ItemAdded(wxDataViewItem(moduleId), wxDataViewItem(symbolId));
+	ItemAdded(createItem(symbol.moduleId()), createItem(symbolId));
 }
 
 
-void PerfFlow::SymbolsListModel::removeSymbol(const Symbol* symbol)
+void PerfFlow::SymbolsListModel::removeSymbol(const SymbolId symbolId)
 {
-}
-
-
-const PerfFlow::Symbol* PerfFlow::SymbolsListModel::getSelected() const
-{
-	return nullptr;
-}
-
-
-void PerfFlow::SymbolsListModel::select(const Symbol* symbol)
-{
+	// Not yet implemented
+	assert(false);
 }
 
 
 bool PerfFlow::SymbolsListModel::isModule(const wxDataViewItem& item)
 {
-	const auto processModule = reinterpret_cast<const ProcessModule*>(item.GetID());
-	return _symbolByModule.find(processModule) != _symbolByModule.end();
+	const auto moduleId = static_cast<uint32_t>(reinterpret_cast<size_t>(item.GetID()));
+	return (moduleId & MODULE_ID_FLAG) == MODULE_ID_FLAG;
+}
+
+
+PerfFlow::SymbolId PerfFlow::SymbolsListModel::asSymbolId(const wxDataViewItem& item)
+{
+	assert(!isModule(item));
+	auto symbolId = static_cast<uint32_t>(reinterpret_cast<size_t>(item.GetID()));
+	symbolId &= ~MODULE_ID_FLAG;
+	return SymbolId(symbolId);
+}
+
+
+PerfFlow::ModuleId PerfFlow::SymbolsListModel::asModuleId(const wxDataViewItem& item)
+{
+	assert(isModule(item));
+	auto moduleId = static_cast<uint32_t>(reinterpret_cast<size_t>(item.GetID()));
+	moduleId &= ~MODULE_ID_FLAG;
+	return ModuleId(moduleId);
+
+}
+
+
+void PerfFlow::SymbolsListModel::setContext(const std::shared_ptr<SamplingContext> context)
+{
+	_context = context;
+}
+
+
+wxDataViewItem PerfFlow::SymbolsListModel::createItem(const SymbolId symbolId)
+{
+	assert(symbolId != SymbolId::None);
+
+	const size_t id = symbolId.index();
+	return wxDataViewItem(reinterpret_cast<void*>(id));
+}
+
+
+wxDataViewItem PerfFlow::SymbolsListModel::createItem(const ModuleId moduleId)
+{
+	assert(moduleId != ModuleId::None);
+
+	size_t id = moduleId.index();
+	id |= MODULE_ID_FLAG;
+	return wxDataViewItem(reinterpret_cast<void*>(id));
 }

@@ -1,9 +1,9 @@
 #pragma once
+#include "symbols/SymbolRepository.h"
 
 
 namespace PerfFlow
 {
-class Symbol;
 
 
 class IUISymbolList
@@ -17,10 +17,10 @@ public:
 	IUISymbolList& operator=(const IUISymbolList& other) = default;
 	IUISymbolList& operator=(IUISymbolList&& other) = default;
 
-	virtual void addSymbol(const Symbol* symbol) = 0;
-	virtual void removeSymbol(const Symbol* symbol) = 0;
-	virtual const Symbol* getSelected() const = 0;
-	virtual void select(const Symbol* symbol) = 0;
+	virtual void addSymbol(SymbolId symbolId) = 0;
+	virtual void removeSymbol(SymbolId symbolId) = 0;
+	virtual SymbolId getSelected() const = 0;
+	virtual void select(SymbolId symbolId) = 0;
 
 };
 

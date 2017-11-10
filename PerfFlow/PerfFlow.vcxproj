@@ -103,7 +103,6 @@
     <ClInclude Include="src\symbols\ModuleRepository.h" />
     <ClInclude Include="src\symbols\ProcessModule.h" />
     <ClInclude Include="src\symbols\Symbol.h" />
-    <ClInclude Include="src\symbols\SymbolId.h" />
     <ClInclude Include="src\symbols\SymbolRepository.h" />
     <ClInclude Include="src\system\Process.h" />
     <ClInclude Include="src\utilities\GLIncludes.h" />
@@ -134,7 +133,6 @@
     <ClCompile Include="src\sampling\ThreadSample.cpp" />
     <ClCompile Include="src\symbols\ProcessModule.cpp" />
     <ClCompile Include="src\symbols\Symbol.cpp" />
-    <ClCompile Include="src\symbols\SymbolId.cpp" />
     <ClCompile Include="src\system\Process.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -32,8 +32,8 @@ private:
 
 	static bool waitForClientToAttach(const ComPtr<IDebugControl>& debugControl);
 
-	const Symbol* createInstructionSymbols(ULONG64 instructionPointer, SamplingContext& context) const;
-	const ProcessModule* tryAddModuleWithIndex(ULONG moduleIndex, ModuleRepository& modules) const;
+	SymbolId createInstructionSymbols(ULONG64 instructionPointer, SamplingContext& context) const;
+	ModuleId tryAddModuleWithIndex(ULONG moduleIndex, ModuleRepository& modules) const;
 };
 
 
