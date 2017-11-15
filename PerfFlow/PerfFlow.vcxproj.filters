@@ -108,6 +108,15 @@
     <ClInclude Include="src\visualization\IUISymbolList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\sampling\SamplingEntityStorage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sampling\SamplingEntityId.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sampling\SamplingEntityStorageIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

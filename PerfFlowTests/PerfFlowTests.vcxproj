@@ -99,6 +99,7 @@
     <ClCompile Include="tests\sampling\ProcessSampleTests.cpp" />
     <ClCompile Include="tests\sampling\SamplerOutputQueueTests.cpp" />
     <ClCompile Include="tests\sampling\SamplingEntityRepositoryTests.cpp" />
+    <ClCompile Include="tests\sampling\SamplingEntityStorageTests.cpp" />
     <ClCompile Include="tests\sampling\SamplingTaskTests.cpp" />
     <ClCompile Include="tests\sampling\ThreadSampleTests.cpp" />
     <ClCompile Include="tests\utilities\TestHandleGenerator.cpp" />

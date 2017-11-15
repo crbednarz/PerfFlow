@@ -11,9 +11,10 @@
 PerfFlow::Test2Visualizer::Test2Visualizer(const std::shared_ptr<SamplingContext> context, IUISymbolList* listController) :
 	_context(context),
 	_uiList(listController),
-	_isInitialized(false)
+	_isInitialized(false),
+	_balls(_context->symbols().createStorage<Ball>())
 {
-	_context->symbols().setupUserData<Ball>();
+
 }
 
 
@@ -47,9 +48,7 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 			float angle = relativeAddress * 3.141592f * 2.0f;
 			float distance = (frameIndex + 1) / static_cast<float>(thread.frameCount());
 
-			auto& userData = _context->symbols().userData<Ball>(symbolId);
-
-			if (userData == nullptr)
+			if (!_balls.has(symbolId))
 			{
 				Ball newBall;
 
@@ -57,15 +56,13 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 				newBall._velocity = glm::vec2(0.0f, glm::cos(angle) * 4.0f);
 				newBall._radius = 0.0f;
 				newBall._symbol = symbolId;
-
+				newBall._attractedTo = nullptr;
 				_uiList->addSymbol(symbolId);
 
-				_balls.push_back(newBall);
-
-				userData = &_balls[_balls.size() - 1];
+				_balls.create(symbolId, newBall);
 			}
 
-			auto& ball = *userData;
+			auto& ball = _balls[symbolId];
 
 			ball._radius = std::min(ball._radius + 4.0f, 12.0f);
 			ball._attractedTo = lastBall;
@@ -83,8 +80,9 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 	_batcher->clear();
 	
 	int i = 0;
-	for (auto& ball : _balls)
+	for (auto& pair : _balls)
 	{
+		auto& ball = pair._value;
 		auto diff = ball._position;
 
 		if (ball._attractedTo != nullptr)
@@ -100,11 +98,13 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 		ball._velocity *= 0.999f;
 		ball._position += ball._velocity * 0.05f;
 	}
-	for (auto& ball : _balls)
+	for (auto& pair : _balls)
 	{
 
-		for (auto& otherBall : _balls)
+		auto& ball = pair._value;
+		for (auto& otherPair : _balls)
 		{
+			auto& otherBall = otherPair._value;
 			if (&otherBall == &ball)
 				continue;
 
@@ -126,8 +126,9 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 			}
 		}
 	}
-	for (auto& ball : _balls)
+	for (const auto& pair : _balls)
 	{
+		auto& ball = pair._value;
 		glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
 		if (ball._symbol == _uiList->getSelected())
 			color = glm::vec4(0.5f, 0.7f, 1.0f, 1.0f);

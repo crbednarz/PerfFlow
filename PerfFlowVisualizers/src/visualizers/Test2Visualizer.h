@@ -39,7 +39,7 @@ private:
 	std::unique_ptr<QuadBatch> _batcher;
 	IUISymbolList* _uiList;
 
-	std::deque<Ball> _balls;
+	SymbolStorage<Ball> _balls;
 	bool _isInitialized;
 
 	void ensureInitialized();

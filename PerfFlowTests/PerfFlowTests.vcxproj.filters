@@ -50,5 +50,8 @@
     <ClCompile Include="tests\sampling\SamplingEntityRepositoryTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tests\sampling\SamplingEntityStorageTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
