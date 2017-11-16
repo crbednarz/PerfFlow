@@ -12,7 +12,8 @@ PerfFlow::OrbVisualizer::OrbVisualizer(const std::shared_ptr<SamplingContext> co
 	_context(context),
 	_uiList(listController),
 	_isInitialized(false),
-	_balls(_context->symbols().createStorage<Ball>())
+	_orbs(_context->symbols().createStorage<Orb>()),
+	_anchors(_context->modules().createStorage<ModuleAnchor>())
 {
 
 }
@@ -27,7 +28,6 @@ void PerfFlow::OrbVisualizer::onSampleReceived(const ProcessSample& sample)
 	{
 		auto thread = sample.getThread(threadIndex);
 
-		Ball* lastBall = nullptr;
 		for (size_t frameIndex = 0; frameIndex < thread.frameCount(); frameIndex++)
 		{
 			auto frame = thread.getFrame(frameIndex);
@@ -36,37 +36,18 @@ void PerfFlow::OrbVisualizer::onSampleReceived(const ProcessSample& sample)
 			if (symbolId == SymbolId::None)
 				continue;
 
-			const auto& symbol = _context->symbols().get(symbolId);
-			const auto& processModule = _context->modules().get(symbol.moduleId());
-
-			size_t address = frame.instructionPointer();
-			size_t minAddress = processModule.address();
-			size_t maxAddress = processModule.size() + minAddress;
-
-			auto relativeAddress = (address - minAddress) / static_cast<float>(maxAddress - minAddress);
-
-			float angle = relativeAddress * 3.141592f * 2.0f;
-			float distance = (frameIndex + 1) / static_cast<float>(thread.frameCount());
-
-			if (!_balls.has(symbolId))
+			if (!_orbs.has(symbolId))
 			{
-				Ball newBall;
+				const auto& symbol = _context->symbols().get(symbolId);
 
-				newBall._position = glm::vec2(glm::cos(angle) * distance, glm::sin(angle) * distance);
-				newBall._velocity = glm::vec2(0.0f, glm::cos(angle) * 4.0f);
-				newBall._radius = 0.0f;
-				newBall._symbol = symbolId;
-				newBall._attractedTo = nullptr;
-				_uiList->addSymbol(symbolId);
+				if (!_anchors.has(symbol.moduleId()))
+					createAnchor(symbol.moduleId());
 
-				_balls.create(symbolId, newBall);
+				createOrb(symbolId, symbol);
 			}
 
-			auto& ball = _balls[symbolId];
-
-			ball._radius = std::min(ball._radius + 4.0f, 12.0f);
-			ball._attractedTo = lastBall;
-			lastBall = &ball;
+			auto& orb = _orbs[symbolId];
+			orb._radius = std::min(orb._radius + 4.0f, 12.0f);
 		}
 	}
 }
@@ -80,55 +61,57 @@ void PerfFlow::OrbVisualizer::render(const Camera& camera)
 	_batcher->clear();
 	
 	int i = 0;
-	for (auto& ball : _balls)
+	for (auto& orb : _orbs)
 	{
-		auto diff = ball._position;
+		auto diff = orb._position;
 
-		if (ball._attractedTo != nullptr)
-			diff -= ball._attractedTo->_position;
+		if (orb._anchor != ModuleId::None)
+			diff -= _anchors[orb._anchor]._position;
 		float dist = glm::length(diff);
 		dist = std::max(1.0f, dist);
 		auto normalizedDiff = diff / dist;
 
-		ball._velocity -= normalizedDiff * std::min(4.0f, 4.0f / (dist * dist));
+		orb._velocity -= normalizedDiff * std::min(4.0f, 4.0f / (dist * dist));
 
-		ball._radius *= 0.95f;
-		ball._radius = std::max(ball._radius, 1.0f);
-		ball._velocity *= 0.999f;
-		ball._position += ball._velocity * 0.05f;
+		orb._radius *= 0.95f;
+		orb._radius = std::max(orb._radius, 1.0f);
+		orb._velocity *= 0.999f;
+		orb._position += orb._velocity * 0.05f;
 	}
-	for (auto& ball : _balls)
+	for (auto& orb : _orbs)
 	{
-		for (auto& otherBall : _balls)
+		for (auto& otherOrb : _orbs)
 		{
-			if (&otherBall == &ball)
+			if (&otherOrb == &orb)
 				continue;
 
-			auto diff = otherBall._position - ball._position;
+			auto diff = otherOrb._position - orb._position;
 			auto distance = glm::length(diff);
 
-			if (distance < ball._radius + otherBall._radius)
+			if (distance < orb._radius + otherOrb._radius)
 			{
 				auto normal = diff / distance;
 
-				ball._velocity = glm::reflect(ball._velocity, normal) * 0.9f;
-				otherBall._velocity = glm::reflect(otherBall._velocity, normal) * 0.9f;
+				orb._velocity = glm::reflect(orb._velocity, normal) * 0.9f;
+				otherOrb._velocity = glm::reflect(otherOrb._velocity, normal) * 0.9f;
 
-				if (otherBall._radius < ball._radius)
-					otherBall._position = ball._position + normal * (ball._radius + otherBall._radius + 0.001f);
+				if (otherOrb._radius < orb._radius)
+					otherOrb._position = orb._position + normal * (orb._radius + otherOrb._radius + 0.001f);
 				else
-					ball._position = otherBall._position - normal * (otherBall._radius + ball._radius + 0.001f);
-
+					orb._position = otherOrb._position - normal * (otherOrb._radius + orb._radius + 0.001f);
 			}
 		}
 	}
-	for (const auto& ball : _balls)
+	std::vector<int> test;
+	for (auto it = _orbs.cbegin(); it != _orbs.cend(); ++it)
 	{
-		glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
-		if (ball._symbol == _uiList->getSelected())
-			color = glm::vec4(0.5f, 0.7f, 1.0f, 1.0f);
+		auto& orb = *it;
 
-		_batcher->add(ball._position - ball._radius, glm::vec2(ball._radius * 2.0f), color);
+		auto color = _anchors[orb._anchor]._color;
+		if (it.id() == _uiList->getSelected())
+			color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+		_batcher->add(orb._position - orb._radius, glm::vec2(orb._radius * 2.0f), color);
 		i++;
 		if (i == _batcher->capacity())
 			break;
@@ -153,6 +136,57 @@ void PerfFlow::OrbVisualizer::ensureInitialized()
 
 	_isInitialized = true;
 
+
+}
+
+
+void PerfFlow::OrbVisualizer::createAnchor(const ModuleId id)
+{
+	static const std::vector<glm::vec4> COLORS
+	{
+		glm::vec4(1.0f, 0.7f, 0.7f, 1.0f),
+		glm::vec4(0.7f, 1.0f, 0.7f, 1.0f),
+		glm::vec4(0.7f, 0.7f, 1.0f, 1.0f),
+		glm::vec4(1.0f, 1.0f, 0.7f, 1.0f),
+		glm::vec4(1.0f, 0.7f, 1.0f, 1.0f),
+		glm::vec4(0.7f, 1.0f, 1.0f, 1.0f),
+		glm::vec4(1.0f, 0.3f, 0.3f, 1.0f),
+		glm::vec4(0.3f, 1.0f, 0.3f, 1.0f),
+		glm::vec4(0.3f, 0.3f, 1.0f, 1.0f),
+		glm::vec4(1.0f, 1.0f, 0.3f, 1.0f),
+		glm::vec4(1.0f, 0.3f, 1.0f, 1.0f),
+		glm::vec4(0.3f, 1.0f, 1.0f, 1.0f)
+	};
+
+	ModuleAnchor anchor;
+	const float angle = id.index() * 0.7f;
+	anchor._position = glm::vec2(glm::cos(angle), glm::sin(angle)) * 100.0f + 50.0f * (id.index() / 4 );
+	anchor._color = COLORS[id.index() % COLORS.size()];
+	_anchors.create(id, anchor);
+}
+
+
+void PerfFlow::OrbVisualizer::createOrb(const SymbolId id, const Symbol& symbol)
+{
+	const auto& processModule = _context->modules().get(symbol.moduleId());
+
+	Orb newBall;
+	const auto address = symbol.address();
+	const auto minAddress = processModule.address();
+	const auto maxAddress = processModule.size() + minAddress;
+
+	const auto relativeAddress = (address - minAddress) / static_cast<float>(maxAddress - minAddress);
+
+	const auto angle = relativeAddress * 3.141592f * 2.0f;
+	const auto distance = 10.0f;
+
+	newBall._position = glm::vec2(glm::cos(angle) * distance, glm::sin(angle) * distance) + _anchors[symbol.moduleId()]._position;
+	newBall._velocity = glm::vec2(0.0f, glm::cos(angle) * 4.0f);
+	newBall._radius = 0.0f;
+	newBall._anchor = symbol.moduleId();
+	_uiList->addSymbol(id);
+
+	_orbs.create(id, newBall);
 
 }
 

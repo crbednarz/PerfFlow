@@ -9,6 +9,7 @@
 
 namespace PerfFlow
 {
+class ThreadSample;
 class SamplingContext;
 class QuadBatch;
 class IUISymbolList;
@@ -24,25 +25,34 @@ public:
 
 	void render(const Camera& camera) override;
 
-
 private:
-	struct Ball
+	struct Orb
 	{
 		glm::vec2 _position;
 		glm::vec2 _velocity;
 		float _radius;
-		Ball* _attractedTo;
-		SymbolId _symbol;
+		ModuleId _anchor;
+	};
+
+	struct ModuleAnchor
+	{
+		glm::vec2 _position;
+		glm::vec4 _color;
 	};
 
 	std::shared_ptr<SamplingContext> _context;
 	std::unique_ptr<QuadBatch> _batcher;
 	IUISymbolList* _uiList;
 
-	SymbolStorage<Ball> _balls;
+	SymbolStorage<Orb> _orbs;
+	ModuleStorage<ModuleAnchor> _anchors;
+
 	bool _isInitialized;
 
 	void ensureInitialized();
+
+	void createAnchor(ModuleId id);
+	void createOrb(SymbolId symbolId, const Symbol& symbol);
 };
 
 
