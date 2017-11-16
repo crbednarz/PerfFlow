@@ -12,47 +12,28 @@ template <typename TContainerType>
 class SamplingEntityStorageIterator
 {
 public:
-	using RawStoredType = typename std::remove_reference<decltype(TContainerType()[0]._value)>::type;
+	using StoredType = typename std::remove_cv<typename std::remove_reference<decltype(TContainerType()[0]._value)>::type>::type;
 
 	template <typename T, typename TEnabled = void>
 	struct ConstCopyHelper
 	{
-		using Type = RawStoredType;
+		using ReferenceType = StoredType&;
+		using PointerType = StoredType*;
 	};
 
 	template <typename T>
 	struct ConstCopyHelper<T, typename std::enable_if<std::is_const_v<T>>::type>
 	{
-		using Type = const RawStoredType;
+		using ReferenceType = const StoredType&;
+		using PointerType = const StoredType*;
 	};
 
-	using StoredType = typename ConstCopyHelper<TContainerType>::Type;
 
-	using CvFreeStoredType = typename std::remove_cv<StoredType>::type;
-	using Id = SamplingEntityId<CvFreeStoredType>;
+	using Id = SamplingEntityId<StoredType>;
 
-	struct Pair
-	{
-		Pair(Id id, StoredType& entity);
-
-		const Id _id;
-		StoredType& _value;
-	};
-
-	class PairPointer
-	{
-	public:
-		PairPointer(Id id, StoredType& entity);
-
-		Pair* operator->();
-
-	private:
-		Pair _pair;
-	};
-
-	using value_type = Pair;
-	using reference = Pair;
-	using pointer = PairPointer;
+	using value_type = StoredType;
+	using reference = typename ConstCopyHelper<TContainerType>::ReferenceType;
+	using pointer = typename ConstCopyHelper<TContainerType>::PointerType;
 	using iterator_category = std::forward_iterator_tag;
 	using difference_type = ptrdiff_t;
 
@@ -66,6 +47,7 @@ public:
 
 	reference operator*() const;
 	pointer operator->() const;
+	Id id() const;
 
 private:
 	TContainerType* _storage;
@@ -73,28 +55,6 @@ private:
 };
 
 
-}
-
-
-template <typename TContainerType>
-PerfFlow::SamplingEntityStorageIterator<TContainerType>::Pair::Pair(Id id, StoredType& entity) :
-	_id(id),
-	_value(entity)
-{
-}
-
-
-template <typename TContainerType>
-PerfFlow::SamplingEntityStorageIterator<TContainerType>::PairPointer::PairPointer(Id id, StoredType& entity) :
-	_pair(id, entity)
-{
-}
-
-
-template <typename TContainerType>
-typename PerfFlow::SamplingEntityStorageIterator<TContainerType>::Pair* PerfFlow::SamplingEntityStorageIterator<TContainerType>::PairPointer::operator->()
-{
-	return &_pair;
 }
 
 
@@ -152,13 +112,20 @@ PerfFlow::SamplingEntityStorageIterator<TContainerType> PerfFlow::SamplingEntity
 template <typename TContainerType>
 typename PerfFlow::SamplingEntityStorageIterator<TContainerType>::reference PerfFlow::SamplingEntityStorageIterator<TContainerType>::operator*() const
 {
-	return Pair(Id(static_cast<uint32_t>(_index)), (*_storage)[_index]._value);
+	return (*_storage)[_index]._value;
 }
 
 
 template <typename TContainerType>
 typename PerfFlow::SamplingEntityStorageIterator<TContainerType>::pointer PerfFlow::SamplingEntityStorageIterator<TContainerType>::operator->() const
 {
-	return PairPointer(Id(static_cast<uint32_t>(_index)), (*_storage)[_index]._value);
+	return (*_storage)[_index]._value;
+}
+
+
+template <typename TContainerType>
+typename PerfFlow::SamplingEntityStorageIterator<TContainerType>::Id PerfFlow::SamplingEntityStorageIterator<TContainerType>::id() const
+{
+	return Id(_index);
 }
 

@@ -96,10 +96,9 @@ namespace PerfFlowTests
 				storage.create(Storage::Id(value), value * 2);
 
 			int i = 0;
-			for (auto it : storage)
+			for (auto item : storage)
 			{
-				Assert::AreEqual(static_cast<uint32_t>(sortedItems[i]), it._id.index());
-				Assert::AreEqual(sortedItems[i++] * 2, it._value);
+				Assert::AreEqual(sortedItems[i++] * 2, item);
 			}
 		}
 
@@ -115,10 +114,9 @@ namespace PerfFlowTests
 			const auto& constStorage = storage;
 
 			int i = 0;
-			for (const auto& it : constStorage)
+			for (const auto& item : constStorage)
 			{
-				Assert::AreEqual(static_cast<uint32_t>(sortedItems[i]), it._id.index());
-				Assert::AreEqual(it._value, sortedItems[i++] * 2);
+				Assert::AreEqual(item, sortedItems[i++] * 2);
 			}
 		}
 
@@ -131,12 +129,12 @@ namespace PerfFlowTests
 				storage.create(Storage::Id(value), value * 2);
 
 			int i = 0;
-			for (auto& it : storage)
-				it._value = i++;
+			for (auto& item : storage)
+				item = i++;
 
 			i = 0;
 			for (auto& it : storage)
-				Assert::AreEqual(i++, it._value);
+				Assert::AreEqual(i++, it);
 		}
 
 	};

@@ -80,9 +80,8 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 	_batcher->clear();
 	
 	int i = 0;
-	for (auto& pair : _balls)
+	for (auto& ball : _balls)
 	{
-		auto& ball = pair._value;
 		auto diff = ball._position;
 
 		if (ball._attractedTo != nullptr)
@@ -98,13 +97,10 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 		ball._velocity *= 0.999f;
 		ball._position += ball._velocity * 0.05f;
 	}
-	for (auto& pair : _balls)
+	for (auto& ball : _balls)
 	{
-
-		auto& ball = pair._value;
-		for (auto& otherPair : _balls)
+		for (auto& otherBall : _balls)
 		{
-			auto& otherBall = otherPair._value;
 			if (&otherBall == &ball)
 				continue;
 
@@ -126,9 +122,8 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 			}
 		}
 	}
-	for (const auto& pair : _balls)
+	for (const auto& ball : _balls)
 	{
-		auto& ball = pair._value;
 		glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
 		if (ball._symbol == _uiList->getSelected())
 			color = glm::vec4(0.5f, 0.7f, 1.0f, 1.0f);
