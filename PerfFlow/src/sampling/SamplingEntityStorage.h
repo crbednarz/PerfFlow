@@ -23,8 +23,8 @@ private:
 
 public:
 	using Id = SamplingEntityId<TEntity>;
-	using iterator = SamplingEntityStorageIterator<std::deque<OptionalValue>>;
-	using const_iterator = SamplingEntityStorageIterator<const std::deque<OptionalValue>>;
+	using iterator = SamplingEntityStorageIterator<std::deque<OptionalValue>, TEntity>;
+	using const_iterator = SamplingEntityStorageIterator<const std::deque<OptionalValue>, TEntity>;
 
 	SamplingEntityStorage();
 

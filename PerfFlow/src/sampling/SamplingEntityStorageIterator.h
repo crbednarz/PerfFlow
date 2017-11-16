@@ -8,7 +8,7 @@ namespace PerfFlow
 {
 	
 
-template <typename TContainerType>
+template <typename TContainerType, typename TEntity>
 class SamplingEntityStorageIterator
 {
 public:
@@ -29,7 +29,7 @@ public:
 	};
 
 
-	using Id = SamplingEntityId<StoredType>;
+	using Id = SamplingEntityId<TEntity>;
 
 	using value_type = StoredType;
 	using reference = typename ConstCopyHelper<TContainerType>::ReferenceType;
@@ -39,8 +39,8 @@ public:
 
 	explicit SamplingEntityStorageIterator(TContainerType* storage, size_t index);
 
-	bool operator==(SamplingEntityStorageIterator& rhs) const;
-	bool operator!=(SamplingEntityStorageIterator& rhs) const;
+	bool operator==(const SamplingEntityStorageIterator& rhs) const;
+	bool operator!=(const SamplingEntityStorageIterator& rhs) const;
 
 	SamplingEntityStorageIterator operator++();
 	SamplingEntityStorageIterator operator++(int);
@@ -58,8 +58,8 @@ private:
 }
 
 
-template <typename TContainerType>
-PerfFlow::SamplingEntityStorageIterator<TContainerType>::SamplingEntityStorageIterator(TContainerType* storage, const size_t index) :
+template <typename TContainerType, typename TEntity>
+PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::SamplingEntityStorageIterator(TContainerType* storage, const size_t index) :
 	_storage(storage),
 	_index(index)
 {
@@ -67,22 +67,22 @@ PerfFlow::SamplingEntityStorageIterator<TContainerType>::SamplingEntityStorageIt
 }
 
 
-template <typename TContainerType>
-bool PerfFlow::SamplingEntityStorageIterator<TContainerType>::operator==(SamplingEntityStorageIterator& rhs) const
+template <typename TContainerType, typename TEntity>
+bool PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::operator==(const SamplingEntityStorageIterator& rhs) const
 {
 	return _storage == rhs._storage && _index == rhs._index;
 }
 
 
-template <typename TContainerType>
-bool PerfFlow::SamplingEntityStorageIterator<TContainerType>::operator!=(SamplingEntityStorageIterator& rhs) const
+template <typename TContainerType, typename TEntity>
+bool PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::operator!=(const SamplingEntityStorageIterator& rhs) const
 {
 	return !(*this == rhs);
 }
 
 
-template <typename TContainerType>
-PerfFlow::SamplingEntityStorageIterator<TContainerType> PerfFlow::SamplingEntityStorageIterator<TContainerType>::operator++()
+template <typename TContainerType, typename TEntity>
+PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity> PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::operator++()
 {
 	if (_index >= _storage->size())
 		return *this;
@@ -100,8 +100,8 @@ PerfFlow::SamplingEntityStorageIterator<TContainerType> PerfFlow::SamplingEntity
 }
 
 
-template <typename TContainerType>
-PerfFlow::SamplingEntityStorageIterator<TContainerType> PerfFlow::SamplingEntityStorageIterator<TContainerType>::operator++(int)
+template <typename TContainerType, typename TEntity>
+PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity> PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::operator++(int)
 {
 	auto previousState = *this;
 	++(*this);
@@ -109,23 +109,23 @@ PerfFlow::SamplingEntityStorageIterator<TContainerType> PerfFlow::SamplingEntity
 }
 
 
-template <typename TContainerType>
-typename PerfFlow::SamplingEntityStorageIterator<TContainerType>::reference PerfFlow::SamplingEntityStorageIterator<TContainerType>::operator*() const
+template <typename TContainerType, typename TEntity>
+typename PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::reference PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::operator*() const
 {
 	return (*_storage)[_index]._value;
 }
 
 
-template <typename TContainerType>
-typename PerfFlow::SamplingEntityStorageIterator<TContainerType>::pointer PerfFlow::SamplingEntityStorageIterator<TContainerType>::operator->() const
+template <typename TContainerType, typename TEntity>
+typename PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::pointer PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::operator->() const
 {
 	return (*_storage)[_index]._value;
 }
 
 
-template <typename TContainerType>
-typename PerfFlow::SamplingEntityStorageIterator<TContainerType>::Id PerfFlow::SamplingEntityStorageIterator<TContainerType>::id() const
+template <typename TContainerType, typename TEntity>
+typename PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::Id PerfFlow::SamplingEntityStorageIterator<TContainerType, TEntity>::id() const
 {
-	return Id(_index);
+	return Id(static_cast<uint32_t>(_index));
 }
 
