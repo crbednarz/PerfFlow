@@ -15,10 +15,10 @@ class IUISymbolList;
 class Symbol;
 
 
-class Test2Visualizer : public IVisualizer
+class OrbVisualizer : public IVisualizer
 {
 public:
-	explicit Test2Visualizer(std::shared_ptr<SamplingContext> context, IUISymbolList* uiList);
+	explicit OrbVisualizer(std::shared_ptr<SamplingContext> context, IUISymbolList* uiList);
 
 	void onSampleReceived(const ProcessSample& sample) override;
 

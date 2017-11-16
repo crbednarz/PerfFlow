@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Test2Visualizer.h"
+#include "OrbVisualizer.h"
 #include "sampling/ProcessSample.h"
 #include "sampling/SamplingContext.h"
 #include "utilities/GLIncludes.h"
@@ -8,7 +8,7 @@
 #include "visualization/IUISymbolList.h"
 
 
-PerfFlow::Test2Visualizer::Test2Visualizer(const std::shared_ptr<SamplingContext> context, IUISymbolList* listController) :
+PerfFlow::OrbVisualizer::OrbVisualizer(const std::shared_ptr<SamplingContext> context, IUISymbolList* listController) :
 	_context(context),
 	_uiList(listController),
 	_isInitialized(false),
@@ -19,7 +19,7 @@ PerfFlow::Test2Visualizer::Test2Visualizer(const std::shared_ptr<SamplingContext
 
 
 
-void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
+void PerfFlow::OrbVisualizer::onSampleReceived(const ProcessSample& sample)
 {
 	using namespace oglplus;
 
@@ -72,7 +72,7 @@ void PerfFlow::Test2Visualizer::onSampleReceived(const ProcessSample& sample)
 }
 
 
-void PerfFlow::Test2Visualizer::render(const Camera& camera)
+void PerfFlow::OrbVisualizer::render(const Camera& camera)
 {
 	using namespace oglplus;
 	ensureInitialized();
@@ -139,7 +139,7 @@ void PerfFlow::Test2Visualizer::render(const Camera& camera)
 }
 
 
-void PerfFlow::Test2Visualizer::ensureInitialized()
+void PerfFlow::OrbVisualizer::ensureInitialized()
 {
 	using namespace oglplus;
 	if (_isInitialized)
