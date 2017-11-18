@@ -78,12 +78,14 @@ void PerfFlow::OrbVisualizer::render(const Camera& camera)
 		orb._velocity *= 0.999f;
 		orb._position += orb._velocity * 0.05f;
 	}
-	for (auto& orb : _orbs)
+	for (auto it = _orbs.begin(); it != _orbs.end(); ++it)
 	{
-		for (auto& otherOrb : _orbs)
+		auto& orb = *it;
+		auto otherIt = it;
+		++otherIt;
+		for (; otherIt != _orbs.end(); ++otherIt)
 		{
-			if (&otherOrb == &orb)
-				continue;
+			auto& otherOrb = *otherIt;
 
 			auto diff = otherOrb._position - orb._position;
 			auto distance = glm::length(diff);
