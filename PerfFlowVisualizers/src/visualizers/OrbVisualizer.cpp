@@ -8,12 +8,12 @@
 #include "visualization/IUISymbolList.h"
 
 
-PerfFlow::OrbVisualizer::OrbVisualizer(const std::shared_ptr<SamplingContext> context, IUISymbolList* listController) :
+PerfFlow::OrbVisualizer::OrbVisualizer(const std::shared_ptr<SamplingContext> context, IUISymbolList* uiList) :
 	_context(context),
-	_uiList(listController),
-	_isInitialized(false),
+	_uiList(uiList),
 	_orbs(_context->symbols().createStorage<Orb>()),
-	_anchors(_context->modules().createStorage<ModuleAnchor>())
+	_anchors(_context->modules().createStorage<ModuleAnchor>()),
+	_isInitialized(false)
 {
 
 }

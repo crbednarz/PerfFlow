@@ -8,8 +8,9 @@
 #include "sampling/SamplerOutputQueue.h"
 #include "sampling/SamplingTask.h"
 #include "VisualizerPane.h"
-#include "visualizers/OrbVisualizer.h"
+#include "visualizers/FlowerVisualizer.h"
 #include "sampling/SamplingContext.h"
+#include "visualizers/OrbVisualizer.h"
 
 
 enum
