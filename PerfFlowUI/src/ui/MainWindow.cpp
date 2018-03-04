@@ -11,6 +11,7 @@
 #include "visualizers/FlowerVisualizer.h"
 #include "sampling/SamplingContext.h"
 #include "visualizers/OrbVisualizer.h"
+#include "ProcessSelectDialog.h"
 
 
 enum
@@ -59,7 +60,10 @@ PerfFlow::MainWindow::~MainWindow()
 
 
 void PerfFlow::MainWindow::onAttachToProcess(wxCommandEvent& event)
-{
+{/*
+	auto dialog = new ProcessSelectDialog(this, "Attach To Process...");
+	dialog->Show(true);*/
+	
 	auto processList = Process::CreateProcessList();
 
 	Process process;
